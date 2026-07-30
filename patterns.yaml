@@ -18,59 +18,59 @@ patterns:
     type: "migration"
     priority: 10
     patterns:
-      - "(?:migriere|portiere|wechsle|upgrade|update) (?:alle|die|sämtliche) .* (?:von|auf|zu) (?:Vue\s?2|Vue\s?3|Composition\s?API|Options\s?API|Nuxt\s?2|Nuxt\s?3|Nuxt\s?4)"
-      - "(?:Vue|Nuxt)\s?\d+\s?(?:→|to|migration|upgrade)"
-      - "Options\s?API\s?(?:→|to|nach)\s?Composition\s?API"
-      - "von\s+(?:Options|Data|Methods)\s+(?:API|Pattern)\s+zu\s+(?:Composition|Setup|Script)"
+      - '(?:migriere|portiere|wechsle|upgrade|update) (?:alle|die|sämtliche) .* (?:von|auf|zu) (?:Vue\s?2|Vue\s?3|Composition\s?API|Options\s?API|Nuxt\s?2|Nuxt\s?3|Nuxt\s?4)'
+      - '(?:Vue|Nuxt)\s?\d+\s?(?:→|to|migration|upgrade)'
+      - 'Options\s?API\s?(?:→|to|nach)\s?Composition\s?API'
+      - 'von\s+(?:Options|Data|Methods)\s+(?:API|Pattern)\s+zu\s+(?:Composition|Setup|Script)'
     description: "Migration zwischen Vue/Nuxt-Versionen oder API-Stilen"
 
   - name: "typescript_migration"
     type: "migration"
     priority: 10
     patterns:
-      - "(?:migriere|konvertiere|wechsle) (?:alle|die|sämtliche) .* (?:von|nach|zu) (?:JavaScript|JS|\.js) (?:zu|nach) (?:TypeScript|TS|\.ts)"
-      - "JavaScript\s?(?:→|to|nach)\s?TypeScript"
-      - "JS\s?Dateien\s?typisieren"
-      - "TypeScript\s?Migration"
+      - '(?:migriere|konvertiere|wechsle) (?:alle|die|sämtliche) .* (?:von|nach|zu) (?:JavaScript|JS|\.js) (?:zu|nach) (?:TypeScript|TS|\.ts)'
+      - 'JavaScript\s?(?:→|to|nach)\s?TypeScript'
+      - 'JS\s?Dateien\s?typisieren'
+      - 'TypeScript\s?Migration'
     description: "Migration von JavaScript zu TypeScript"
 
   - name: "framework_migration"
     type: "migration"
     priority: 9
     patterns:
-      - "(?:migriere|wechsle|upgrade) (?:von|auf|zu) (?:React|Angular|Svelte|Next\.?js|Gatsby|Astro|SolidJS)"
-      - "(?:React|Angular|Svelte)\s?(?:→|to|migration)"
-      - "Framework\s?Wechsel"
-      - "von\s+\w+\s+nach\s+\w+"
+      - '(?:migriere|wechsle|upgrade) (?:von|auf|zu) (?:React|Angular|Svelte|Next\.?js|Gatsby|Astro|SolidJS)'
+      - '(?:React|Angular|Svelte)\s?(?:→|to|migration)'
+      - 'Framework\s?Wechsel'
+      - 'von\s+\w+\s+nach\s+\w+'
     description: "Migration zwischen Frontend-Frameworks"
 
   - name: "api_migration"
     type: "migration"
     priority: 9
     patterns:
-      - "(?:migriere|ersetze|wechsle) (?:die|die\s+API|den\s+API\-Aufruf) (?:von|auf|zu)"
-      - "(?:REST|GraphQL|SOAP|gRPC)\s?(?:→|to)\s?(?:REST|GraphQL|SOAP|gRPC)"
-      - "API\s?Version\s?\d+\s?(?:→|to|migration)"
-      - "Endpoint\s?Migration"
+      - '(?:migriere|ersetze|wechsle) (?:die|die\s+API|den\s+API\-Aufruf) (?:von|auf|zu)'
+      - '(?:REST|GraphQL|SOAP|gRPC)\s?(?:→|to)\s?(?:REST|GraphQL|SOAP|gRPC)'
+      - 'API\s?Version\s?\d+\s?(?:→|to|migration)'
+      - 'Endpoint\s?Migration'
     description: "Migration von API-Endpoints oder API-Typen"
 
   - name: "dependency_migration"
     type: "migration"
     priority: 8
     patterns:
-      - "(?:aktualisiere|upgrade|update) (?:alle|die|sämtliche) (?:Dependencies|Abhängigkeiten|Pakete)"
-      - "npm\s?outdated"
-      - "package\.json\s?(?:aktualisieren|updaten)"
-      - "Dependency\s?Upgrade"
+      - '(?:aktualisiere|upgrade|update) (?:alle|die|sämtliche) (?:Dependencies|Abhängigkeiten|Pakete)'
+      - 'npm\s?outdated'
+      - 'package\.json\s?(?:aktualisieren|updaten)'
+      - 'Dependency\s?Upgrade'
     description: "Aktualisierung von Abhängigkeiten/Paketen"
 
   - name: "code_style_migration"
     type: "migration"
     priority: 7
     patterns:
-      - "(?:passe|ändere|migriere) (?:den|das) (?:Code\-?Style|Linter|Formatter|ESLint|Prettier)\s?an"
-      - "von\s+\w+\s+auf\s+\w+\s+(?:Code\-?Style|Formatierung)"
-      - "Styleguide\s?Migration"
+      - '(?:passe|ändere|migriere) (?:den|das) (?:Code\-?Style|Linter|Formatter|ESLint|Prettier)\s?an'
+      - 'von\s+\w+\s+auf\s+\w+\s+(?:Code\-?Style|Formatierung)'
+      - 'Styleguide\s?Migration'
     description: "Migration von Code-Stil oder Linting-Regeln"
 
   # ============================================================================
@@ -81,60 +81,60 @@ patterns:
     type: "audit"
     priority: 10
     patterns:
-      - "(?:auditiere|prüfe|untersuche|analysiere) (?:die|den|das) (?:Codebase|Code|Projekt|Anwendung) (?:auf|für|hinsichtlich) (?:Sicherheit|Security|Sicherheitslücken|Vulnerabilities)"
-      - "(?:Sicherheits|Security)\s?Audit"
-      - "(?:OWASP|CVE|XSS|SQL\s?Injection|CSRF)\s?(?:Audit|Prüfung)"
-      - "Sicherheitslücken\s?finden"
+      - '(?:auditiere|prüfe|untersuche|analysiere) (?:die|den|das) (?:Codebase|Code|Projekt|Anwendung) (?:auf|für|hinsichtlich) (?:Sicherheit|Security|Sicherheitslücken|Vulnerabilities)'
+      - '(?:Sicherheits|Security)\s?Audit'
+      - '(?:OWASP|CVE|XSS|SQL\s?Injection|CSRF)\s?(?:Audit|Prüfung)'
+      - 'Sicherheitslücken\s?finden'
     description: "Sicherheitsaudit der Codebase"
 
   - name: "performance_audit"
     type: "audit"
     priority: 9
     patterns:
-      - "(?:auditiere|prüfe|analysiere) (?:die|den|das) (?:Performance|Leistung|Ladezeit|Rendering)"
-      - "Performance\s?Audit"
-      - "(?:Lighthouse|Web\s?Vitals|Core\s?Web\s?Vitals)\s?(?:Audit|Prüfung)"
-      - "Ladezeiten\s?optimieren"
+      - '(?:auditiere|prüfe|analysiere) (?:die|den|das) (?:Performance|Leistung|Ladezeit|Rendering)'
+      - 'Performance\s?Audit'
+      - '(?:Lighthouse|Web\s?Vitals|Core\s?Web\s?Vitals)\s?(?:Audit|Prüfung)'
+      - 'Ladezeiten\s?optimieren'
     description: "Performance-Audit"
 
   - name: "code_quality_audit"
     type: "audit"
     priority: 9
     patterns:
-      - "(?:auditiere|prüfe|analysiere) (?:den|das) (?:Code|Codebase) (?:auf|für) (?:Qualität|Best\s?Practices|Clean\s?Code)"
-      - "Code\s?Quality\s?Audit"
-      - "(?:ESLint|SonarQube|CodeClimate)\s?(?:Audit|Prüfung)"
-      - "Technical\s?Debt\s?Analyse"
+      - '(?:auditiere|prüfe|analysiere) (?:den|das) (?:Code|Codebase) (?:auf|für) (?:Qualität|Best\s?Practices|Clean\s?Code)'
+      - 'Code\s?Quality\s?Audit'
+      - '(?:ESLint|SonarQube|CodeClimate)\s?(?:Audit|Prüfung)'
+      - 'Technical\s?Debt\s?Analyse'
     description: "Code-Qualitätsaudit"
 
   - name: "dsgvo_audit"
     type: "audit"
     priority: 9
     patterns:
-      - "(?:auditiere|prüfe|analysiere) (?:die|den|das) (?:DSGVO|Datenschutz|GDPR)\s?Compliance"
-      - "DSGVO\s?Audit"
-      - "(?:Datenflüsse|Data\s?Flows)\s?(?:auditieren|prüfen)"
-      - "Privacy\s?Compliance\s?Check"
+      - '(?:auditiere|prüfe|analysiere) (?:die|den|das) (?:DSGVO|Datenschutz|GDPR)\s?Compliance'
+      - 'DSGVO\s?Audit'
+      - '(?:Datenflüsse|Data\s?Flows)\s?(?:auditieren|prüfen)'
+      - 'Privacy\s?Compliance\s?Check'
     description: "DSGVO/Datenschutz-Audit"
 
   - name: "accessibility_audit"
     type: "audit"
     priority: 8
     patterns:
-      - "(?:auditiere|prüfe|analysiere) (?:die|den|das) (?:Barrierefreiheit|Accessibility|WCAG)"
-      - "Accessibility\s?Audit"
-      - "(?:a11y|WCAG\s?2\.?1|WCAG\s?2\.?2)\s?(?:Audit|Prüfung)"
-      - "Screen\s?Reader\s?Test"
+      - '(?:auditiere|prüfe|analysiere) (?:die|den|das) (?:Barrierefreiheit|Accessibility|WCAG)'
+      - 'Accessibility\s?Audit'
+      - '(?:a11y|WCAG\s?2\.?1|WCAG\s?2\.?2)\s?(?:Audit|Prüfung)'
+      - 'Screen\s?Reader\s?Test'
     description: "Barrierefreiheits-Audit"
 
   - name: "general_audit"
     type: "audit"
     priority: 7
     patterns:
-      - "(?:auditiere|prüfe|analysiere) (?:die|den|das|das\s+gesamte) (?:Codebase|Projekt|Repository|Repo)"
-      - "Codebase\s?Audit"
-      - "(?:Komplett|Vollständig|Umfassend)\s?(?:Audit|Prüfung)"
-      - "durchleuchte\s+(?:den|das|die)\s+Code"
+      - '(?:auditiere|prüfe|analysiere) (?:die|den|das|das\s+gesamte) (?:Codebase|Projekt|Repository|Repo)'
+      - 'Codebase\s?Audit'
+      - '(?:Komplett|Vollständig|Umfassend)\s?(?:Audit|Prüfung)'
+      - 'durchleuchte\s+(?:den|das|die)\s+Code'
     description: "Allgemeines Code-Audit"
 
   # ============================================================================
@@ -145,50 +145,50 @@ patterns:
     type: "research"
     priority: 10
     patterns:
-      - "(?:recherchiere|finde|ermittle|sammle) (?:die|den|das) (?:Best\s?Practices|Besten\s?Praktiken|Empfehlungen) (?:für|zu|von)"
-      - "Best\s?Practices\s?(?:für|in|mit)"
-      - "Wie\s+mache\s+ich\s+.+\s+(?:richtig|am\s+besten|optimal)"
-      - "Was\s+sind\s+die\s+besten\s+(\w+\s+)+Praktiken"
+      - '(?:recherchiere|finde|ermittle|sammle) (?:die|den|das) (?:Best\s?Practices|Besten\s?Praktiken|Empfehlungen) (?:für|zu|von)'
+      - 'Best\s?Practices\s?(?:für|in|mit)'
+      - 'Wie\s+mache\s+ich\s+.+\s+(?:richtig|am\s+besten|optimal)'
+      - 'Was\s+sind\s+die\s+besten\s+(\w+\s+)+Praktiken'
     description: "Recherche nach Best Practices"
 
   - name: "api_documentation_research"
     type: "research"
     priority: 9
     patterns:
-      - "(?:recherchiere|dokumentiere|ermittle) (?:die|den|das) (?:API|Endpoint|Schnittstelle) (?:von|für|zu)"
-      - "(?:REST|GraphQL|SOAP)\s?API\s?Dokumentation"
-      - "(?:Swagger|OpenAPI|Postman)\s?Dokumentation"
-      - "Wie\s+nutze\s+ich\s+die\s+API\s+von"
+      - '(?:recherchiere|dokumentiere|ermittle) (?:die|den|das) (?:API|Endpoint|Schnittstelle) (?:von|für|zu)'
+      - '(?:REST|GraphQL|SOAP)\s?API\s?Dokumentation'
+      - '(?:Swagger|OpenAPI|Postman)\s?Dokumentation'
+      - 'Wie\s+nutze\s+ich\s+die\s+API\s+von'
     description: "Recherche nach API-Dokumentation"
 
   - name: "library_framework_research"
     type: "research"
     priority: 9
     patterns:
-      - "(?:recherchiere|vergleiche|evaluiere) (?:\w+|\w+\.\w+)\s+(?:vs\.?|oder|und)\s+(\w+|\w+\.\w+)"
-      - "(?:Vergleich|Comparison)\s+(?:von|between|of)\s+(?:\w+\s+)+und"
-      - "Welche\s+(\w+\s+)+Bibliothek\s+soll\s+ich\s+nutzen"
-      - "(?:React|Vue|Angular|Svelte)\s?(?:vs|oder)\s?(?:React|Vue|Angular|Svelte)"
+      - '(?:recherchiere|vergleiche|evaluiere) (?:\w+|\w+\.\w+)\s+(?:vs\.?|oder|und)\s+(\w+|\w+\.\w+)'
+      - '(?:Vergleich|Comparison)\s+(?:von|between|of)\s+(?:\w+\s+)+und'
+      - 'Welche\s+(\w+\s+)+Bibliothek\s+soll\s+ich\s+nutzen'
+      - '(?:React|Vue|Angular|Svelte)\s?(?:vs|oder)\s?(?:React|Vue|Angular|Svelte)'
     description: "Vergleich von Bibliotheken/Frameworks"
 
   - name: "tutorial_guide_research"
     type: "research"
     priority: 8
     patterns:
-      - "(?:recherchiere|finde|suche) (?:ein|eine|den|das) (?:Tutorial|Guide|Anleitung|Leitfaden) (?:für|zu|über)"
-      - "Wie\s+fange\s+ich\s+mit\s+.+\s+an"
-      - "Einführung\s+in\s+"
-      - "Getting\s+Started\s+with"
+      - '(?:recherchiere|finde|suche) (?:ein|eine|den|das) (?:Tutorial|Guide|Anleitung|Leitfaden) (?:für|zu|über)'
+      - 'Wie\s+fange\s+ich\s+mit\s+.+\s+an'
+      - 'Einführung\s+in\s+'
+      - 'Getting\s+Started\s+with'
     description: "Recherche nach Tutorials/Anleitungen"
 
   - name: "general_research"
     type: "research"
     priority: 7
     patterns:
-      - "(?:recherchiere|untersuche|analysiere|ermittle|finde\s+heraus) (?:zu|über|für)"
-      - "Was\s+ist\s+.+"  # Nicht zu allgemein!
-      - "Wie\s+funktioniert\s+"
-      - "Erkläre\s+mir"
+      - '(?:recherchiere|untersuche|analysiere|ermittle|finde\s+heraus) (?:zu|über|für)'
+      - 'Was\s+ist\s+.+'  # Nicht zu allgemein!
+      - 'Wie\s+funktioniert\s+'
+      - 'Erkläre\s+mir'
     description: "Allgemeine Recherche"
 
   # ============================================================================
@@ -199,39 +199,39 @@ patterns:
     type: "review"
     priority: 10
     patterns:
-      - "(?:review|prüfe|begutachte|analysiere) (?:den|die|das) (?:Pull\s?Request|PR|Merge\s?Request|MR)"
-      - "PR\s?Review"
-      - "Pull\s?Request\s?\#?\d+"
-      - "Code\s?Review\s+(?:für|von|des)"
+      - '(?:review|prüfe|begutachte|analysiere) (?:den|die|das) (?:Pull\s?Request|PR|Merge\s?Request|MR)'
+      - 'PR\s?Review'
+      - 'Pull\s?Request\s?\#?\d+'
+      - 'Code\s?Review\s+(?:für|von|des)'
     description: "Review eines Pull Requests"
 
   - name: "full_codebase_review"
     type: "review"
     priority: 9
     patterns:
-      - "(?:review|prüfe|begutachte) (?:die|den|das|das\s+gesamte) (?:Codebase|Code|Projekt|Repository)"
-      - "Full\s?Code\s?Review"
-      - "Komplettes\s?Code\s?Review"
-      - "Durchsicht\s+des\s+(?:gesamten|kompletten)\s+Codes"
+      - '(?:review|prüfe|begutachte) (?:die|den|das|das\s+gesamte) (?:Codebase|Code|Projekt|Repository)'
+      - 'Full\s?Code\s?Review'
+      - 'Komplettes\s?Code\s?Review'
+      - 'Durchsicht\s+des\s+(?:gesamten|kompletten)\s+Codes'
     description: "Review der gesamten Codebase"
 
   - name: "architecture_review"
     type: "review"
     priority: 9
     patterns:
-      - "(?:review|prüfe|bewerte) (?:die|den|das) (?:Architektur|Struktur|Aufbau|Design)"
-      - "Architecture\s?Review"
-      - "(?:System|Software)\s?Design\s?Review"
-      - "Strukturelle\s?Analyse"
+      - '(?:review|prüfe|bewerte) (?:die|den|das) (?:Architektur|Struktur|Aufbau|Design)'
+      - 'Architecture\s?Review'
+      - '(?:System|Software)\s?Design\s?Review'
+      - 'Strukturelle\s?Analyse'
     description: "Architektur-Review"
 
   - name: "specific_file_review"
     type: "review"
     priority: 8
     patterns:
-      - "(?:review|prüfe|begutachte) (?:die|den|das) (?:Datei|File) [\"']?[\w\-\.\/]+[\"']?"
-      - "(?:review|prüfe) (?:src|app|lib|components)\/[\w\-\.]+\.\w+"
-      - "Code\s?Review\s+(?:für|von)\s+[\w\-\.\/]+\.\w+"
+      - '(?:review|prüfe|begutachte) (?:die|den|das) (?:Datei|File) [\"'']?[\w\-\.\/]+[\"'']?'
+      - '(?:review|prüfe) (?:src|app|lib|components)\/[\w\-\.]+\.\w+'
+      - 'Code\s?Review\s+(?:für|von)\s+[\w\-\.\/]+\.\w+'
     description: "Review einer spezifischen Datei"
 
   # ============================================================================
@@ -242,48 +242,48 @@ patterns:
     type: "testing"
     priority: 10
     patterns:
-      - "(?:führe|aus|run|execute) (?:die|den|das) (?:Unit\s?Tests|Unittests|Jest|Vitest|Mocha)"
-      - "(?:Jest|Vitest|Mocha|Chai)\s?Tests\s?(?:ausführen|run|starten)"
-      - "Unit\s?Test\s?Coverage"
-      - "Test\s?Suite\s?(?:ausführen|run)"
+      - '(?:führe|aus|run|execute) (?:die|den|das) (?:Unit\s?Tests|Unittests|Jest|Vitest|Mocha)'
+      - '(?:Jest|Vitest|Mocha|Chai)\s?Tests\s?(?:ausführen|run|starten)'
+      - 'Unit\s?Test\s?Coverage'
+      - 'Test\s?Suite\s?(?:ausführen|run)'
     description: "Ausführung von Unit-Tests"
 
   - name: "integration_testing"
     type: "testing"
     priority: 9
     patterns:
-      - "(?:führe|aus|run) (?:Integration|Integrations)\s?Tests"
-      - "E2E\s?Tests"
-      - "(?:Cypress|Playwright|Selenium)\s?Tests"
-      - "End\s?to\s?End\s?Testing"
+      - '(?:führe|aus|run) (?:Integration|Integrations)\s?Tests'
+      - 'E2E\s?Tests'
+      - '(?:Cypress|Playwright|Selenium)\s?Tests'
+      - 'End\s?to\s?End\s?Testing'
     description: "Integration/E2E-Tests"
 
   - name: "test_coverage"
     type: "testing"
     priority: 9
     patterns:
-      - "(?:ermittle|berechne|prüfe|analysiere) (?:die|den|das) (?:Test\s?Coverage|Testabdeckung)"
-      - "Test\s?Coverage\s?Report"
-      - "Wie\s+(?:hoch|gut|vollständig)\s+ist\s+die\s+Testabdeckung"
-      - "Coverage\s?Threshold"
+      - '(?:ermittle|berechne|prüfe|analysiere) (?:die|den|das) (?:Test\s?Coverage|Testabdeckung)'
+      - 'Test\s?Coverage\s?Report'
+      - 'Wie\s+(?:hoch|gut|vollständig)\s+ist\s+die\s+Testabdeckung'
+      - 'Coverage\s?Threshold'
     description: "Test-Coverage-Analyse"
 
   - name: "performance_testing"
     type: "testing"
     priority: 8
     patterns:
-      - "(?:führe|mache|durch) (?:Performance|Last|Stress)\s?Tests"
-      - "(?:Benchmark|Load\s?Testing|Stress\s?Test)"
-      - "Wie\s+(?:schnell|performant)\s+ist"
+      - '(?:führe|mache|durch) (?:Performance|Last|Stress)\s?Tests'
+      - '(?:Benchmark|Load\s?Testing|Stress\s?Test)'
+      - 'Wie\s+(?:schnell|performant)\s+ist'
     description: "Performance-Tests"
 
   - name: "general_testing"
     type: "testing"
     priority: 7
     patterns:
-      - "(?:teste|prüfe|verifiziere) (?:die|den|das) (?:Anwendung|App|Code|Funktionalität)"
-      - "Test\s?All\s?Files"
-      - "Alle\s?Tests\s?(?:ausführen|run)"
+      - '(?:teste|prüfe|verifiziere) (?:die|den|das) (?:Anwendung|App|Code|Funktionalität)'
+      - 'Test\s?All\s?Files'
+      - 'Alle\s?Tests\s?(?:ausführen|run)'
     description: "Allgemeines Testing"
 
   # ============================================================================
@@ -294,48 +294,48 @@ patterns:
     type: "tooling"
     priority: 10
     patterns:
-      - "(?:repariere|fixe|behebe) (?:den|das) (?:Build|Build\s?Prozess|Build\s?Pipeline)"
-      - "(?:Build|Compilation)\s?Error"
-      - "Build\s?Failed"
-      - "(?:Webpack|Vite|Rollup|esbuild)\s?Konfiguration"
+      - '(?:repariere|fixe|behebe) (?:den|das) (?:Build|Build\s?Prozess|Build\s?Pipeline)'
+      - '(?:Build|Compilation)\s?Error'
+      - 'Build\s?Failed'
+      - '(?:Webpack|Vite|Rollup|esbuild)\s?Konfiguration'
     description: "Build-Pipeline Probleme"
 
   - name: "dependency_management"
     type: "tooling"
     priority: 9
     patterns:
-      - "(?:aktualisiere|upgrade|update|repariere) (?:die|den|das) (?:package\.json|dependencies|Abhängigkeiten)"
-      - "npm\s?install"
-      - "pnpm\s?upgrade"
-      - "Dependency\s?Conflicts"
+      - '(?:aktualisiere|upgrade|update|repariere) (?:die|den|das) (?:package\.json|dependencies|Abhängigkeiten)'
+      - 'npm\s?install'
+      - 'pnpm\s?upgrade'
+      - 'Dependency\s?Conflicts'
     description: "Dependency Management"
 
   - name: "linting_formatting"
     type: "tooling"
     priority: 8
     patterns:
-      - "(?:repariere|fixe|behebe) (?:ESLint|Prettier|Formatter|Lint)\s?Errors"
-      - "(?:ESLint|Prettier|Stylelint)\s?Konfiguration"
-      - "Code\s?Formatierung"
-      - "Lint\s?All\s?Files"
+      - '(?:repariere|fixe|behebe) (?:ESLint|Prettier|Formatter|Lint)\s?Errors'
+      - '(?:ESLint|Prettier|Stylelint)\s?Konfiguration'
+      - 'Code\s?Formatierung'
+      - 'Lint\s?All\s?Files'
     description: "Linting/Formattierung"
 
   - name: "ci_cd"
     type: "tooling"
     priority: 8
     patterns:
-      - "(?:konfiguriere|setze\s+up|repariere) (?:CI|CD|CI\/CD|GitHub\s?Actions|GitLab\s?CI)"
-      - "(?:Pipeline|Workflow)\s?YAML"
-      - "CI\s?Pipeline\s?Failed"
+      - '(?:konfiguriere|setze\s+up|repariere) (?:CI|CD|CI\/CD|GitHub\s?Actions|GitLab\s?CI)'
+      - '(?:Pipeline|Workflow)\s?YAML'
+      - 'CI\s?Pipeline\s?Failed'
     description: "CI/CD-Konfiguration"
 
   - name: "general_tooling"
     type: "tooling"
     priority: 7
     patterns:
-      - "(?:konfiguriere|setze\s+up|repariere|optimier) (?:das|den|die) (?:Tool|Werkzeug|Setup)"
-      - "(?:Dev|Development)\s?Environment"
-      - "Tooling\s?Setup"
+      - '(?:konfiguriere|setze\s+up|repariere|optimier) (?:das|den|die) (?:Tool|Werkzeug|Setup)'
+      - '(?:Dev|Development)\s?Environment'
+      - 'Tooling\s?Setup'
     description: "Allgemeines Tooling"
 
   # ============================================================================
@@ -346,37 +346,37 @@ patterns:
     type: "scraping"
     priority: 10
     patterns:
-      - "(?:scrape|extrahiere|hole|sammle) (?:Daten|Inhalte|Informationen) (?:von|aus|aus\s+der\s+) (?:Webseite|Website|URL)"
-      - "Web\s?Scraping"
-      - "(?:cheerio|puppeteer|playwright|selenium)\s?Scraping"
-      - "HTML\s?Parsing"
+      - '(?:scrape|extrahiere|hole|sammle) (?:Daten|Inhalte|Informationen) (?:von|aus|aus\s+der\s+) (?:Webseite|Website|URL)'
+      - 'Web\s?Scraping'
+      - '(?:cheerio|puppeteer|playwright|selenium)\s?Scraping'
+      - 'HTML\s?Parsing'
     description: "Web-Scraping"
 
   - name: "api_scraping"
     type: "scraping"
     priority: 9
     patterns:
-      - "(?:scrape|hole|extrahiere) (?:Daten|Inhalte) (?:von|aus|über) (?:API|Endpoint|Schnittstelle)"
-      - "API\s?Data\s?Extraction"
-      - "(?:fetch|GET|POST)\s+von\s+(?:https?://|api\.|\w+\.com)"
+      - '(?:scrape|hole|extrahiere) (?:Daten|Inhalte) (?:von|aus|über) (?:API|Endpoint|Schnittstelle)'
+      - 'API\s?Data\s?Extraction'
+      - '(?:fetch|GET|POST)\s+von\s+(?:https?://|api\.|\w+\.com)'
     description: "API-Daten-Extraktion"
 
   - name: "data_extraction"
     type: "scraping"
     priority: 8
     patterns:
-      - "(?:extrahiere|parsing|parse) (?:Daten|Strukturen|Inhalte) (?:aus|von)"
-      - "Data\s?Extraction"
-      - "(?:CSV|JSON|XML)\s?Parsing"
-      - "Daten\s?Konvertierung"
+      - '(?:extrahiere|parsing|parse) (?:Daten|Strukturen|Inhalte) (?:aus|von)'
+      - 'Data\s?Extraction'
+      - '(?:CSV|JSON|XML)\s?Parsing'
+      - 'Daten\s?Konvertierung'
     description: "Daten-Extraktion/Transformation"
 
   - name: "general_scraping"
     type: "scraping"
     priority: 7
     patterns:
-      - "(?:scrape|hole|sammle) .+"
-      - "Extraktion\s+von"
+      - '(?:scrape|hole|sammle) .+'
+      - 'Extraktion\s+von'
     description: "Allgemeines Scraping"
 
   # ============================================================================
@@ -387,36 +387,36 @@ patterns:
     type: "refactoring"
     priority: 10
     patterns:
-      - "(?:refactore|restrukturiere|optimier) (?:den|das|die) (?:Code|Funktion|Modul|Komponente)"
-      - "Code\s?Refactoring"
-      - "(?:Clean\s?Code|Sauberer\s?Code)\s?Prinzipien"
-      - "(?:DRY|SOLID|KISS)\s?Refactoring"
+      - '(?:refactore|restrukturiere|optimier) (?:den|das|die) (?:Code|Funktion|Modul|Komponente)'
+      - 'Code\s?Refactoring'
+      - '(?:Clean\s?Code|Sauberer\s?Code)\s?Prinzipien'
+      - '(?:DRY|SOLID|KISS)\s?Refactoring'
     description: "Code-Refactoring"
 
   - name: "architecture_refactoring"
     type: "refactoring"
     priority: 9
     patterns:
-      - "(?:refactore|ändere|restrukturiere) (?:die|den|das) (?:Architektur|Struktur|Aufbau)"
-      - "(?:Monolith|Microservices|Modularisierung)"
-      - "Layer\s?Separation"
-      - "Dependency\s?Injection"
+      - '(?:refactore|ändere|restrukturiere) (?:die|den|das) (?:Architektur|Struktur|Aufbau)'
+      - '(?:Monolith|Microservices|Modularisierung)'
+      - 'Layer\s?Separation'
+      - 'Dependency\s?Injection'
     description: "Architektur-Refactoring"
 
   - name: "performance_refactoring"
     type: "refactoring"
     priority: 8
     patterns:
-      - "(?:optimier|verbessere) (?:die|den|das) (?:Performance|Ladezeit|Rendering)"
-      - "Performance\s?Optimierung"
-      - "(?:Lazy\s?Loading|Caching|Memoization)"
-      - "Code\s?Effizienz"
+      - '(?:optimier|verbessere) (?:die|den|das) (?:Performance|Ladezeit|Rendering)'
+      - 'Performance\s?Optimierung'
+      - '(?:Lazy\s?Loading|Caching|Memoization)'
+      - 'Code\s?Effizienz'
     description: "Performance-Refactoring"
 
   - name: "general_refactoring"
     type: "refactoring"
     priority: 7
     patterns:
-      - "(?:verbessere|mache\s+besser|optimier) (?:den|das|die) (?:Code|Codebase)"
-      - "Code\s?Verbesserung"
+      - '(?:verbessere|mache\s+besser|optimier) (?:den|das|die) (?:Code|Codebase)'
+      - 'Code\s?Verbesserung'
     description: "Allgemeines Refactoring"
