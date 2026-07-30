@@ -8,10 +8,33 @@ Eine vereinfachte Version, die sofort funktioniert.
 import re
 import time
 import uuid
+import os
 from typing import List, Dict, Optional, Any, Callable
 from dataclasses import dataclass, field
 from enum import Enum
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# Import IntegrationMatcher
+try:
+    from .integration_matcher import (
+        IntegrationMatcher, 
+        IntegrationFormatter,
+        IntegrationProposal,
+        IntegrationType,
+        IntegrationMode
+    )
+except ImportError:
+    # Fallback für direkte Ausführung
+    import sys
+    import os
+    sys.path.insert(0, os.path.dirname(__file__))
+    from integration_matcher import (
+        IntegrationMatcher, 
+        IntegrationFormatter,
+        IntegrationProposal,
+        IntegrationType,
+        IntegrationMode
+    )
 
 
 # ============================================================================
@@ -72,6 +95,8 @@ class WorkflowPlan:
     strategy: str = "parallel"
     estimated_duration: int = 0
     estimated_tokens: int = 0
+    integration_proposal: Optional[IntegrationProposal] = None
+    integrations_enabled: bool = True
 
 
 @dataclass
@@ -221,11 +246,20 @@ class WorkflowExecutor:
         TaskType.UNKNOWN: {"default_agents": 2, "parallel": True},
     }
     
-    def create_workflow_plan(self, task: str) -> WorkflowPlan:
-        """Erstellt einen Workflow-Plan."""
+    def __init__(self, config_dir: Optional[str] = None):
+        """Initialisiert den WorkflowExecutor."""
+        self.config_dir = config_dir or os.path.dirname(os.path.dirname(__file__))
+        self.integration_matcher = IntegrationMatcher(self.config_dir)
+    
+    def create_workflow_plan(
+        self, 
+        task: str, 
+        enable_integrations: bool = True
+    ) -> WorkflowPlan:
+        """Erstellt einen Workflow-Plan mit optionaler Integration."""
         # Analysiere die Aufgabe
-        matcher = PatternMatcher()
-        task_analysis = matcher.analyze_task(task)
+        pattern_matcher = PatternMatcher()
+        task_analysis = pattern_matcher.analyze_task(task)
         
         # Hole Strategie
         strategy_config = self.TASK_STRATEGIES.get(
@@ -233,6 +267,14 @@ class WorkflowExecutor:
         )
         is_parallel = strategy_config["parallel"]
         default_agents = strategy_config["default_agents"]
+        
+        # Erstelle Integrationsvorschlag (falls aktiviert)
+        integration_proposal = None
+        if enable_integrations:
+            try:
+                integration_proposal = self.integration_matcher.create_proposal(task)
+            except Exception as e:
+                print(f"⚠️  Fehler beim Erstellen des Integrationsvorschlags: {e}")
         
         # Erstelle Subagents
         subagents = []
@@ -259,7 +301,9 @@ class WorkflowExecutor:
             subagents=subagents,
             strategy="parallel" if is_parallel else "sequential",
             estimated_duration=estimated_duration,
-            estimated_tokens=estimated_tokens
+            estimated_tokens=estimated_tokens,
+            integration_proposal=integration_proposal,
+            integrations_enabled=enable_integrations
         )
     
     def format_workflow_plan(self, workflow_plan: WorkflowPlan) -> str:
@@ -272,6 +316,10 @@ class WorkflowExecutor:
         lines.append(f"- Scope: {workflow_plan.task_analysis.scope or 'Nicht spezifiziert'}")
         lines.append(f"- Komplexität: {workflow_plan.task_analysis.complexity_stars()}")
         lines.append("")
+        
+        # Zeige Integrationsvorschläge an (falls verfügbar)
+        if workflow_plan.integration_proposal and workflow_plan.integrations_enabled:
+            lines.append(IntegrationFormatter.format_proposal(workflow_plan.integration_proposal))
         
         lines.append("📋 **Vorgeschlagener Plan**")
         lines.append("")
@@ -359,9 +407,11 @@ class WorkflowExecutor:
 class HyperVibe:
     """Hauptklasse für HyperVibe."""
     
-    def __init__(self, verbose: bool = False):
+    def __init__(self, verbose: bool = False, config_dir: Optional[str] = None):
         self.verbose = verbose
-        self.executor = WorkflowExecutor()
+        self.config_dir = config_dir or os.path.dirname(os.path.dirname(__file__))
+        self.executor = WorkflowExecutor(self.config_dir)
+        self.integration_matcher = IntegrationMatcher(self.config_dir)
     
     def process_task(
         self,
