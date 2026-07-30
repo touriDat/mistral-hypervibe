@@ -35,6 +35,7 @@ try:
         IntegrationType,
         IntegrationMode
     )
+    from .token_estimator import TokenEstimator, TokenEstimate
 except ImportError:
     # Fallback für direkte Ausführung
     import sys
@@ -47,6 +48,7 @@ except ImportError:
         IntegrationType,
         IntegrationMode
     )
+    from token_estimator import TokenEstimator, TokenEstimate
 
 
 # ============================================================================
@@ -134,6 +136,7 @@ class WorkflowPlan:
         estimated_tokens: Geschätzte Token-Anzahl
         integration_proposal: Integrationsvorschläge (falls aktiviert)
         integrations_enabled: Ob Integrationen aktiviert sind
+        token_estimate: Detaillierte Token-Schätzung (Optional)
     """
     task_analysis: TaskAnalysis
     subagents: List[SubAgent] = field(default_factory=list)
@@ -142,6 +145,7 @@ class WorkflowPlan:
     estimated_tokens: int = 0
     integration_proposal: Optional[IntegrationProposal] = None
     integrations_enabled: bool = True
+    token_estimate: Optional[TokenEstimate] = None
 
 
 @dataclass
@@ -315,6 +319,7 @@ class WorkflowExecutor:
         """
         self.config_dir = config_dir or os.path.dirname(os.path.dirname(__file__))
         self.integration_matcher = IntegrationMatcher(self.config_dir)
+        self.token_estimator = TokenEstimator(self.config_dir)
     
     def create_workflow_plan(
         self, 
@@ -376,24 +381,46 @@ class WorkflowExecutor:
             )
             subagents.append(subagent)
         
-        # Schätze Ressourcen
-        complexity_multiplier = {
-            ComplexityLevel.LOW: 1,
-            ComplexityLevel.MEDIUM: 2,
-            ComplexityLevel.HIGH: 3
-        }.get(task_analysis.complexity, 2)
+        # Schätze Ressourcen mit TokenEstimator
+        # Wir schätzen direkt, da wir noch keinen vollständigen WorkflowPlan haben
+        token_estimate = self.token_estimator.estimate(
+            task_type=task_analysis.type.value,
+            complexity=task_analysis.complexity.value,
+            num_agents=default_agents,
+            integrations=[],  # Integrationen werden später hinzugefügt
+            strategy="parallel" if is_parallel else "sequential"
+        )
         
-        estimated_duration = default_agents * 5 * complexity_multiplier
-        estimated_tokens = default_agents * 10000 * complexity_multiplier
+        estimated_duration = int(token_estimate.duration_minutes)
+        estimated_tokens = token_estimate.tokens
+        
+        # Aktualisiere Token-Schätzung mit Integrationen (falls vorhanden)
+        integrations_list = []
+        if integration_proposal:
+            integrations_list = (
+                [i.name for i in integration_proposal.auto_integrations] +
+                [i.name for i in integration_proposal.suggested_integrations] +
+                [i.name for i in integration_proposal.required_integrations]
+            )
+        
+        # Endgültige Token-Schätzung mit Integrationen
+        final_token_estimate = self.token_estimator.estimate(
+            task_type=task_analysis.type.value,
+            complexity=task_analysis.complexity.value,
+            num_agents=default_agents,
+            integrations=integrations_list,
+            strategy="parallel" if is_parallel else "sequential"
+        )
         
         return WorkflowPlan(
             task_analysis=task_analysis,
             subagents=subagents,
             strategy="parallel" if is_parallel else "sequential",
-            estimated_duration=estimated_duration,
-            estimated_tokens=estimated_tokens,
+            estimated_duration=int(final_token_estimate.duration_minutes),
+            estimated_tokens=final_token_estimate.tokens,
             integration_proposal=integration_proposal,
-            integrations_enabled=enable_integrations
+            integrations_enabled=enable_integrations,
+            token_estimate=final_token_estimate  # Füge TokenEstimate zum Plan hinzu
         )
     
     def format_workflow_plan(self, workflow_plan: WorkflowPlan) -> str:
@@ -426,6 +453,23 @@ class WorkflowExecutor:
         lines.append("")
         lines.append(f"- Geschätzte Dauer: {workflow_plan.estimated_duration} Minuten")
         lines.append(f"- Geschätzte Tokens: ~{workflow_plan.estimated_tokens:,}")
+        
+        # Zeige detaillierte Token-Schätzung an (falls verfügbar)
+        if workflow_plan.token_estimate:
+            lines.append("")
+            min_tokens, max_tokens = self.token_estimator.get_token_estimate_range(
+                workflow_plan.token_estimate
+            )
+            lines.append(f"  (Bereich: {min_tokens:,} - {max_tokens:,} Tokens)")
+            
+            # Zeige Aufschlüsselung
+            base = workflow_plan.token_estimate.breakdown.get('base', {})
+            if base and base.get('task_type_multiplier', 1) != 1:
+                lines.append(f"  Task-Typ: ×{base.get('task_type_multiplier', 1)}")
+            
+            if workflow_plan.token_estimate.breakdown.get('total_integration_cost', 0) > 0:
+                lines.append(f"  +Integrationen: {workflow_plan.token_estimate.breakdown.get('total_integration_cost', 0):,} Tokens")
+        
         lines.append("")
         
         lines.append("✅ **Plan bestätigen?** (Y/n)")
