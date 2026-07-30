@@ -1,0 +1,24 @@
+# HyperVibe Development Dependencies
+# =================================
+
+# Core dependencies (also in requirements.txt)
+-r requirements.txt
+
+# Testing
+pytest>=7.0
+pytest-cov>=4.0
+
+# Linting & Formatting
+flake8>=6.0
+black>=23.0
+isort>=5.12
+
+# Type checking
+mypy>=1.0
+types-PyYAML>=6.0
+
+# Coverage
+coverage>=7.0
+
+# Optional: Für Codecov
+# codecov>=2.1
