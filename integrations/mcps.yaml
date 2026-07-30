@@ -1,0 +1,287 @@
+# MCP Integration Configuration
+# ==============================
+# 
+# Diese Datei definiert, welche MCP-Server für welche Aufgabentypen
+# geeignet sind und wie sie integriert werden sollen.
+#
+# MCP-Server können:
+# - Tools bereitstellen (z.B. mapbox-location-grounding)
+# - Daten abrufen (z.B. von APIs)
+# - Berechnungen durchführen
+# - Externe Systeme anbinden
+
+mcp_mappings:
+  # ============================================================================
+  # ALLGEMEINE MCP-SERVER
+  # ============================================================================
+  general:
+    - name: "mapbox-location-grounding"
+      trigger_patterns:
+        - "(?:Location|Standort|Ort)"
+        - "(?:Adresse|Address)"
+        - "(?:Koordinaten|Coordinates)"
+        - "(?:Geocoding|Reverse.*Geocoding)"
+      integration_mode: auto
+      priority: 10
+      description: "Für Standort-basierte Abfragen (Geocoding, Reverse Geocoding)"
+      tools:
+        - "location_grounding"
+        - "reverse_geocoding"
+        - "search_places"
+      
+    - name: "mapbox-mcp-runtime-patterns"
+      trigger_patterns:
+        - "(?:Runtime|Laufzeit|Integration)"
+        - "(?:Agent|KI|AI).*Mapbox"
+        - "(?:Framework|Web).*MCP"
+      integration_mode: suggest
+      priority: 8
+      description: "Integration von Mapbox in KI-Agenten und Runtimes"
+
+  # ============================================================================
+  # RECHERCHE
+  # ============================================================================
+  research:
+    - name: "mapbox-search-integration"
+      trigger_patterns:
+        - "(?:Mapbox|mapbox).*Suche"
+        - "(?:Search|Searchbox)"
+        - "(?:POI|Points.*of.*Interest)"
+      integration_mode: auto
+      priority: 10
+      description: "Kompletter Workflow für Mapbox-Suche (von Discovery bis Integration)"
+      tools:
+        - "search_patterns"
+        - "autocomplete_config"
+        
+    - name: "mapbox-search-patterns"
+      trigger_patterns:
+        - "(?:Such|Search).*Pattern"
+        - "(?:Geocoding|POI).*Tool"
+        - "(?:Parameter|Config).*Search"
+      integration_mode: auto
+      priority: 9
+      description: "Muster für Suchanfragen (Welches Tool für welchen Use Case?)"
+      
+    - name: "mapbox-style-patterns"
+      trigger_patterns:
+        - "(?:Style|Kartenstil)"
+        - "(?:Layer|Ebene)"
+        - "(?:Symbol|Icon|Farben)"
+        - "(?:3D|Terrain|Höhen)"
+      integration_mode: auto
+      priority: 9
+      description: "Vorgefertigte Stile und Layer-Konfigurationen"
+      
+    - name: "mapbox-cartography"
+      trigger_patterns:
+        - "(?:Kartographie|Cartography)"
+        - "(?:Design|Gestaltung).*Karte"
+        - "(?:Farben|Typography|Hierarchie)"
+      integration_mode: suggest
+      priority: 8
+      description: "Kartographische Design-Prinzipien und Best Practices"
+      
+    - name: "mapbox-data-visualization-patterns"
+      trigger_patterns:
+        - "(?:Daten|Data).*Visualisierung"
+        - "(?:Choropleth|Heatmap|3D)"
+        - "(?:Layer|Style).*für.*Daten"
+      integration_mode: suggest
+      priority: 8
+      description: "Muster für Datenvisualisierung auf Karten"
+
+  # ============================================================================
+  # AUDITS
+  # ============================================================================
+  audit:
+    - name: "mapbox-style-quality"
+      trigger_patterns:
+        - "(?:Style|Kartenstil).*Qualität"
+        - "(?:Audit|Prüfung).*Style"
+        - "(?:Validierung|Validation).*Map"
+      integration_mode: suggest
+      priority: 9
+      description: "Qualitätssicherung für Mapbox-Stile (Validierung, Barrierefreiheit)"
+      tools:
+        - "style_validation"
+        - "accessibility_check"
+        
+    - name: "mapbox-token-security"
+      trigger_patterns:
+        - "(?:Token|API.*Key).*Sicherheit"
+        - "(?:Scope|Restriction|Rotation)"
+        - "(?:Geheimnis|Secret).*Management"
+      integration_mode: auto
+      priority: 10
+      description: "Sicherheits-Checks für Mapbox-Tokens"
+      tools:
+        - "token_audit"
+        - "scope_analysis"
+
+  # ============================================================================
+  # MIGRATIONEN
+  # ============================================================================
+  migration:
+    - name: "mapbox-maplibre-migration"
+      trigger_patterns:
+        - "(?:MapLibre|Maplibre).*Migration"
+        - "(?:von|from).*MapLibre.*zu|to.*Mapbox"
+        - "(?:Wechsel|Switch).*Map.*Library"
+      integration_mode: auto
+      priority: 10
+      description: "Migration von MapLibre GL JS zu Mapbox GL JS"
+      
+    - name: "mapbox-google-maps-migration"
+      trigger_patterns:
+        - "(?:Google.*Maps|Gmaps).*Mapbox"
+        - "(?:Migration|Wechsel).*von.*Google"
+        - "(?:API.*Äquivalente|Equivalents)"
+      integration_mode: suggest
+      priority: 9
+      description: "Migration von Google Maps zu Mapbox (API-Äquivalente)"
+
+  # ============================================================================
+  # SCRAPING / DATEN
+  # ============================================================================
+  scraping:
+    - name: "mapbox-geospatial-operations"
+      trigger_patterns:
+        - "(?:Geo|Spatial).*Operation"
+        - "(?:Buffer|Distance|Area|Intersection)"
+        - "(?:Geodaten|Geospatial).*Verarbeitung"
+      integration_mode: suggest
+      priority: 8
+      description: "Geospatiale Operationen (Puffer, Distanzen, Flächen, etc.)"
+      tools:
+        - "geospatial_analysis"
+        - "distance_calculation"
+        - "area_calculation"
+
+  # ============================================================================
+  # TOOLING / INTEGRATION
+  # ============================================================================
+  tooling:
+    - name: "mapbox-web-integration-patterns"
+      trigger_patterns:
+        - "(?:Integration|Einbindung).*Mapbox"
+        - "(?:React|Vue|Svelte|Angular).*Mapbox"
+        - "(?:Component|Komponente).*Map"
+      integration_mode: auto
+      priority: 10
+      description: "Best Practices für die Integration von Mapbox in Web-Frameworks"
+      
+    - name: "mapbox-web-performance-patterns"
+      trigger_patterns:
+        - "(?:Performance|Leistung).*Mapbox"
+        - "(?:Optimierung|Optimization).*Map"
+        - "(?:Ladezeit|Load.*time)"
+      integration_mode: suggest
+      priority: 8
+      description: "Performance-Optimierungen für Mapbox-Integrationen"
+
+# MCP-Integrations-Strategien
+mcp_integration_strategies:
+  # MCP kann vor der Subagent-Ausführung genutzt werden
+  pre_execution:
+    description: "MCP wird BEVOR die Subagents starten verwendet"
+    example: "mapbox-location-grounding für Standort-Daten"
+    use_cases:
+      - "Datenabruf, die für alle Subagents benötigt werden"
+      - "Kontext-Setup für die Aufgabe"
+      
+  # MCP kann parallel zu Subagents genutzt werden
+  parallel:
+    description: "MCP läuft PARALLEL zu Subagents"
+    example: "mapbox-style-patterns für Design-Entscheidungen"
+    use_cases:
+      - "Daten, die unabhängig von Subagents sind"
+      - "Tools, die Subagents unterstützen"
+      
+  # MCP kann nach der Subagent-Ausführung genutzt werden
+  post_execution:
+    description: "MCP wird NACH den Subagents verwendet"
+    example: "mapbox-style-quality für Validierung"
+    use_cases:
+      - "Validierung der Subagent-Ergebnisse"
+      - "Zusammenfassung oder Aggregation"
+
+# Prioritäts-Regeln (wie bei Skills)
+priority_rules:
+  exact_match: 10
+  partial_match: 7
+  keyword_match: 5
+  general_match: 3
+
+# Konfliktlösung
+conflict_resolution:
+  strategy: highest_priority
+  max_suggestions: 3
+  
+# MCP-spezifische Konfiguration
+mcp_config:
+  # Timeout für MCP-Aufrufe
+  timeout_seconds: 30
+  
+  # Maximale Anzahl gleichzeitiger MCP-Aufrufe
+  max_concurrent_calls: 5
+  
+  # Retry-Strategie
+  retry_attempts: 2
+  retry_delay_seconds: 5
+  
+  # Fehlertoleranz
+  continue_on_error: true  # Bei MCP-Fehler weitermachen
+  log_errors: true        # Fehler in Logs speichern
+
+# MCP-Typen und ihre Fähigkeiten
+mcp_types:
+  # Datenabruf-MCPs
+  data_fetchers:
+    description: "MCPs, die Daten von externen Quellen abrufen"
+    examples:
+      - "mapbox-location-grounding"
+      - "web-search"
+    integration_mode: pre_execution
+    
+  # Tool-MCPs
+  tool_providers:
+    description: "MCPs, die Tools/Functions bereitstellen"
+    examples:
+      - "mapbox-geospatial-operations"
+      - "calculator"
+    integration_mode: parallel
+    
+  # Validierungs-MCPs
+  validators:
+    description: "MCPs, die Ergebnisse validieren"
+    examples:
+      - "mapbox-style-quality"
+      - "code-linter"
+    integration_mode: post_execution
+
+# Fallback-Strategie
+fallback:
+  # Wenn kein passender MCP gefunden wird
+  default_mcp: null  # Kein Default-MCP
+  
+  # User-Frage bei Unsicherheit
+  ask_user: true
+  
+  # Logge ungenutzte MCP-Vorschläge
+  log_unused_suggestions: true
+
+# Integration mit HyperVibe-Workflows
+workflow_integration:
+  # MCP-Ergebnisse können an Subagents übergeben werden
+  pass_to_subagents: true
+  
+  # MCP kann Subagent-Konfiguration beeinflussen
+  influence_subagent_config: true
+  
+  # Beispiel: mapbox-location-grounding gibt Koordinaten
+  # → Subagents können diese für standortbasierte Aufgaben nutzen
+  example:
+    mcp: "mapbox-location-grounding"
+    action: "get_coordinates"
+    subagent_usage: "Filtere Daten nach Standort"

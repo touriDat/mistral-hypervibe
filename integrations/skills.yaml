@@ -1,0 +1,233 @@
+# Skill Integration Configuration
+# ================================
+# 
+# Diese Datei definiert, welche Skills für welche Aufgabentypen
+# geeignet sind und wie sie integriert werden sollen.
+#
+# Integration-Modi:
+# - suggest: Skill wird dem User vorgeschlagen (User entscheidet)
+# - auto: Skill wird automatisch aktiviert
+# - required: Skill ist für diese Aufgabe zwingend erforderlich
+
+skill_mappings:
+  # ============================================================================
+  # MIGRATIONEN
+  # ============================================================================
+  migration:
+    # Vue/Nuxt Migrationen
+    - name: "mapbox-web-integration-patterns"
+      trigger_patterns:
+        - "(?:Vue|Nuxt).*Mapbox"
+        - "(?:mapbox|Mapbox).*Integration"
+        - "(?:GL\s?JS|Mapbox\s?GL)"
+      integration_mode: auto
+      priority: 10
+      description: "Für alle Mapbox-spezifischen Migrationen (z.B. von v2 auf v3)"
+      
+    - name: "vue-migration-guide"
+      trigger_patterns:
+        - "(?:Vue|Nuxt).*2.*3"
+        - "Options.*API.*Composition"
+        - "Vue.*Migration"
+      integration_mode: suggest
+      priority: 9
+      description: "Offizielle Vue-Migrationsanleitung"
+      
+    # TypeScript Migrationen
+    - name: "typescript-migration"
+      trigger_patterns:
+        - "JavaScript.*TypeScript"
+        - "JS.*TS"
+        - "TypeScript.*Migration"
+      integration_mode: suggest
+      priority: 8
+      description: "Hilft bei der Konvertierung von JS zu TS"
+
+  # ============================================================================
+  # AUDITS
+  # ============================================================================
+  audit:
+    # Sicherheitsaudits
+    - name: "security-audit"
+      trigger_patterns:
+        - "(?:Sicherheits|Security).*Audit"
+        - "(?:OWASP|CVE|XSS|SQL.*Injection)"
+        - "Sicherheitslücken"
+      integration_mode: auto
+      priority: 10
+      description: "Spezialisiert auf Sicherheitsaudits"
+      
+    - name: "mapbox-token-security"
+      trigger_patterns:
+        - "Mapbox.*Token"
+        - "Mapbox.*Sicherheit"
+        - "Token.*Management"
+      integration_mode: auto
+      priority: 9
+      description: "Für Mapbox-Token-Sicherheit (Scope, Restrictions, Rotation)"
+      
+    # DSGVO
+    - name: "dsgvo-compliance"
+      trigger_patterns:
+        - "DSGVO"
+        - "Datenschutz"
+        - "GDPR"
+      integration_mode: suggest
+      priority: 8
+      description: "DSGVO-Compliance-Prüfung"
+      
+    # Performance
+    - name: "web-performance-audit"
+      trigger_patterns:
+        - "Performance.*Audit"
+        - "Lighthouse"
+        - "Core.*Web.*Vitals"
+      integration_mode: suggest
+      priority: 7
+      description: "Web-Performance-Analyse"
+
+  # ============================================================================
+  # RECHERCHE
+  # ============================================================================
+  research:
+    - name: "mapbox-search-patterns"
+      trigger_patterns:
+        - "(?:Mapbox|mapbox).*Suche"
+        - "(?:Geocoding|POI|Search).*Mapbox"
+        - "(?:search|Search).*Integration"
+      integration_mode: auto
+      priority: 10
+      description: "Für Mapbox-Suche (Geocoding, POI, Autocomplete)"
+      
+    - name: "mapbox-style-patterns"
+      trigger_patterns:
+        - "(?:Mapbox|mapbox).*Style"
+        - "(?:Karten|Map).*Design"
+        - "(?:Style|Design).*Pattern"
+      integration_mode: auto
+      priority: 9
+      description: "Für Mapbox-Kartenstile und Design-Muster"
+      
+    - name: "mapbox-cartography"
+      trigger_patterns:
+        - "(?:Kartographie|Cartography)"
+        - "(?:Farben|Colors).*Karte"
+        - "(?:Design|Typography).*Map"
+      integration_mode: suggest
+      priority: 8
+      description: "Kartographische Design-Prinzipien"
+      
+    - name: "mapbox-web-integration-patterns"
+      trigger_patterns:
+        - "(?:React|Vue|Svelte|Angular).*Mapbox"
+        - "(?:Framework|Web).*Integration.*Map"
+        - "(?:Component|Komponente).*Map"
+      integration_mode: auto
+      priority: 8
+      description: "Framework-spezifische Mapbox-Integrationen"
+      
+    - name: "mapbox-geospatial-operations"
+      trigger_patterns:
+        - "(?:Geo|Spatial|räumlich)"
+        - "(?:Buffer|Distance|Area)"
+        - "(?:Geospatial|Geodaten)"
+      integration_mode: suggest
+      priority: 7
+      description: "Für geospatiale Operationen"
+
+  # ============================================================================
+  # CODE REVIEWS
+  # ============================================================================
+  review:
+    - name: "code-quality-checker"
+      trigger_patterns:
+        - "(?:Code.*Quality|Qualität)"
+        - "(?:Best.*Practices|Praktiken)"
+      integration_mode: suggest
+      priority: 8
+      description: "Code-Qualitätsprüfung"
+
+  # ============================================================================
+  # TESTING
+  # ============================================================================
+  testing:
+    - name: "test-coverage-analyzer"
+      trigger_patterns:
+        - "(?:Coverage|Testabdeckung)"
+        - "Test.*Coverage"
+      integration_mode: suggest
+      priority: 7
+      description: "Detaillierte Coverage-Analyse"
+
+  # ============================================================================
+  # SCRAPING
+  # ============================================================================
+  scraping:
+    - name: "web-scraping-tools"
+      trigger_patterns:
+        - "(?:Web|HTML).*Scraping"
+        - "(?:cheerio|puppeteer|playwright)"
+      integration_mode: suggest
+      priority: 7
+      description: "Tools und Best Practices für Web-Scraping"
+
+  # ============================================================================
+  # TOOLING
+  # ============================================================================
+  tooling:
+    - name: "devops-best-practices"
+      trigger_patterns:
+        - "(?:CI|CD|DevOps)"
+        - "(?:Pipeline|Workflow)"
+        - "(?:Docker|Kubernetes)"
+      integration_mode: suggest
+      priority: 7
+      description: "DevOps Best Practices"
+
+# Integration-Strategien
+integration_strategies:
+  # Skill kann vor der Subagent-Ausführung genutzt werden
+  pre_execution:
+    description: "Skill wird BEVOR die Subagents starten verwendet"
+    example: "mapbox-token-security für Sicherheitsaudits"
+    
+  # Skill kann parallel zu Subagents genutzt werden
+  parallel:
+    description: "Skill läuft PARALLEL zu Subagents"
+    example: "mapbox-web-integration-patterns für Migrationen"
+    
+  # Skill kann nach der Subagent-Ausführung genutzt werden
+  post_execution:
+    description: "Skill wird NACH den Subagents verwendet"
+    example: "code-quality-checker für Validierung"
+
+# Prioritäts-Regeln
+priority_rules:
+  # Höhere Priorität = Skill wird eher vorgeschlagen
+  - exact_match: 10       # Exakter Pattern-Match
+  - partial_match: 7      # Teilweiser Match
+  - keyword_match: 5      # Keyword im Task gefunden
+  - general_match: 3      # Allgemeine Übereinstimmung
+
+# Falls mehrere Skills passen
+conflict_resolution:
+  strategy: highest_priority  # highest_priority, first_match, user_choice
+  max_suggestions: 3       # Maximale Anzahl Vorschläge
+  
+# Skill-Aktivierungs-Optionen
+activation_options:
+  auto_activate: false      # Skills automatisch aktivieren (ohne User-Bestätigung)
+  always_suggest: true      # Immer vorschlagen, auch wenn auto_activate=false
+  show_description: true    # Zeige Skill-Beschreibung im Vorschlag
+  show_priority: true       # Zeige Priorität im Vorschlag
+
+# Skill-spezifische Konfiguration
+skill_config:
+  # Einige Skills brauchen spezifische Parameter
+  mapbox-web-integration-patterns:
+    default_framework: "vue"  # Standard-Framework, wenn nicht spezifiziert
+    
+  mapbox-token-security:
+    check_scopes: true        # Prüfe Token-Scopes
+    check_restrictions: true  # Prüfe Domain-Restrictions
+    suggest_rotation: true    # Vorschlag für Token-Rotation

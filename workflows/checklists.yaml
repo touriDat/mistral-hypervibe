@@ -1,0 +1,539 @@
+# Checklists für verschiedene Aufgabentypen
+# ========================================
+# 
+# Diese Datei enthält Checklisten, die von Subagents für verschiedene
+# Aufgaben-Typen verwendet werden.
+
+checklists:
+  # ============================================================================
+  # MIGRATION CHECKLIST
+  # ============================================================================
+  migration:
+    pre_migration:
+      - name: "Backup erstellen"
+        description: "Erstelle Backups aller zu migrierenden Dateien"
+        required: true
+        
+      - name: "Abhängigkeiten prüfen"
+        description: "Prüfe alle Abhängigkeiten der zu migrierenden Dateien"
+        required: true
+        
+      - name: "Testumgebung einrichten"
+        description: "Richte eine Testumgebung für die Migration ein"
+        required: true
+        
+      - name: "Migrationstools installieren"
+        description: "Installiere alle benötigten Migrationstools"
+        required: false
+        
+      - name: "Dokumentation lesen"
+        description: "Lies die offizielle Migrationsdokumentation"
+        required: false
+        
+    during_migration:
+      - name: "Inkrementelle Änderungen"
+        description: "Mache kleine, inkrementelle Änderungen"
+        required: true
+        
+      - name: "Tests ausführen"
+        description: "Führe Tests nach jedem Schritt aus"
+        required: true
+        
+      - name: "Changes dokumentieren"
+        description: "Dokumentiere alle vorgenommenen Änderungen"
+        required: true
+        
+      - name: "Konflikte lösen"
+        description: "Löse Merge-Konflikte sofort"
+        required: true
+        
+    post_migration:
+      - name: "Alle Tests ausführen"
+        description: "Führe die gesamte Testsuite aus"
+        required: true
+        
+      - name: "Code-Qualität prüfen"
+        description: "Prüfe Code-Qualität mit Linter/Formatter"
+        required: true
+        
+      - name: "Build prüfen"
+        description: "Prüfe, dass der Build erfolgreich ist"
+        required: true
+        
+      - name: "Performance testen"
+        description: "Teste Performance der migrierten Code"
+        required: false
+        
+      - name: "Dokumentation aktualisieren"
+        description: "Aktualisiere alle betroffenen Dokumentationen"
+        required: false
+
+  # ============================================================================
+  # AUDIT CHECKLISTS
+  # ============================================================================
+  security_audit:
+    general:
+      - name: "Authentifizierung prüfen"
+        description: "Prüfe alle Authentifizierungsmechanismen"
+        severity: critical
+        
+      - name: "Autorisierung prüfen"
+        description: "Prüfe alle Autorisierungschecks (RBAC, ACLs)"
+        severity: critical
+        
+      - name: "Input-Validierung"
+        description: "Prüfe alle Input-Validierungen (SQL Injection, XSS, etc.)"
+        severity: critical
+        
+      - name: "Sensible Daten"
+        description: "Suche nach hardcoded Secrets, API Keys, Passwords"
+        severity: critical
+        
+      - name: "CORS Konfiguration"
+        description: "Prüfe CORS-Header und -Einstellungen"
+        severity: high
+        
+      - name: "CSRF Schutz"
+        description: "Prüfe CSRF-Tokens und -Schutz"
+        severity: high
+        
+      - name: "HTTPS erzwingen"
+        description: "Prüfe, dass HTTPS überall erzwungen wird"
+        severity: high
+        
+      - name: "Security Headers"
+        description: "Prüfe Security-Header (CSP, HSTS, X-Frame-Options, etc.)"
+        severity: high
+        
+      - name: "Dependency Vulnerabilities"
+        description: "Prüfe auf bekannte Sicherheitslücken in Abhängigkeiten"
+        severity: high
+        
+      - name: "Error Handling"
+        description: "Prüfe, dass keine sensiblen Daten in Errors geleakt werden"
+        severity: medium
+        
+      - name: "Logging"
+        description: "Prüfe, dass keine sensiblen Daten geloggt werden"
+        severity: medium
+        
+      - name: "Rate Limiting"
+        description: "Prüfe Rate-Limiting für APIs und Endpoints"
+        severity: medium
+        
+    nodejs:
+      - name: "npm audit"
+        description: "Führe npm audit aus"
+        severity: critical
+        
+      - name: "Helmet.js"
+        description: "Prüfe Verwendung von Helmet.js"
+        severity: high
+        
+      - name: "Express Middleware"
+        description: "Prüfe Sicherheit von Express-Middleware"
+        severity: high
+        
+    frontend:
+      - name: "XSS Schutz"
+        description: "Prüfe Schutz vor Cross-Site Scripting"
+        severity: critical
+        
+      - name: "Content Security Policy"
+        description: "Prüfe CSP-Header-Konfiguration"
+        severity: high
+        
+      - name: "Cookie Sicherheit"
+        description: "Prüfe Cookie-Attributes (HttpOnly, Secure, SameSite)"
+        severity: high
+        
+      - name: "DOM Manipulation"
+        description: "Prüfe sichere DOM-Manipulation (kein innerHTML)"
+        severity: medium
+
+  performance_audit:
+    - name: "Lighthouse Score"
+      description: "Prüfe Lighthouse Performance Score (>90)"
+      severity: high
+      
+    - name: "Bundle Size"
+      description: "Analysiere Bundle-Größe und Optimierungspotenzial"
+      severity: high
+      
+    - name: "Lazy Loading"
+      description: "Prüfe Implementierung von Lazy Loading"
+      severity: medium
+      
+    - name: "Image Optimization"
+      description: "Prüfe Bildoptimierung (Formate, Größen, CDN)"
+      severity: medium
+      
+    - name: "Caching Strategy"
+      description: "Prüfe Caching-Header und -Strategie"
+      severity: medium
+      
+    - name: "Critical CSS"
+      description: "Prüfe, dass Critical CSS inline ist"
+      severity: medium
+      
+    - name: "JavaScript Bundle"
+      description: "Prüfe Bundle-Splitting und Tree-Shaking"
+      severity: high
+      
+    - name: "Font Loading"
+      description: "Prüfe Font-Loading-Strategie (display: swap)"
+      severity: low
+
+  code_quality_audit:
+    - name: "ESLint Regeln"
+      description: "Prüfe Einhaltung der ESLint-Regeln"
+      severity: high
+      
+    - name: "Code Duplikation"
+      description: "Suche nach dupliziertem Code (DRY-Prinzip)"
+      severity: medium
+      
+    - name: "Funktionslänge"
+      description: "Prüfe, dass Funktionen nicht zu lang sind (<30 Zeilen)"
+      severity: medium
+      
+    - name: "Zyklomatische Komplexität"
+      description: "Prüfe zyklomatische Komplexität (<10)"
+      severity: medium
+      
+    - name: "Naming Conventions"
+      description: "Prüfe Einhaltung von Namenskonventionen"
+      severity: low
+      
+    - name: "Comment Quality"
+      description: "Prüfe Qualität und Aktualität von Kommentaren"
+      severity: low
+      
+    - name: "TODO/FIXME"
+      description: "Suche nach ungelösten TODOs und FIXMEs"
+      severity: medium
+      
+    - name: "Dead Code"
+      description: "Suche nach ungenutztem/ totem Code"
+      severity: medium
+
+  dsgvo_audit:
+    - name: "Datenflüsse dokumentieren"
+      description: "Dokumentiere alle Datenflüsse (Wer, Was, Wann, Wo, Warum)"
+      severity: critical
+      
+    - name: "Personenbezogene Daten"
+      description: "Identifiziere alle verarbeiteten personenbezogenen Daten"
+      severity: critical
+      
+    - name: "Rechtliche Grundlage"
+      description: "Prüfe Dokumentation der rechtlichen Grundlage (Einwilligung, Vertrag, etc.)"
+      severity: critical
+      
+    - name: "Speicherdauer"
+      description: "Prüfe Einhaltung von Löschfristen"
+      severity: critical
+      
+    - name: "Datenminimierung"
+      description: "Prüfe, ob nur notwendige Daten verarbeitet werden"
+      severity: high
+      
+    - name: "Zweckbindung"
+      description: "Prüfe, dass Daten nur für dokumentierte Zwecke genutzt werden"
+      severity: high
+      
+    - name: "Betroffenenrechte"
+      description: "Prüfe Implementierung von Betroffenenrechten (Auskunft, Löschung, etc.)"
+      severity: high
+      
+    - name: "Datensicherheit"
+      description: "Prüfe technische Maßnahmen zum Schutz personenbezogener Daten"
+      severity: high
+      
+    - name: "Drittlandtransfer"
+      description: "Prüfe, ob Daten in Drittländer übertragen werden"
+      severity: critical
+      
+    - name: "Auftragsverarbeitung"
+      description: "Prüfe AV-Verge mit Dienstleistern"
+      severity: high
+
+  # ============================================================================
+  # RESEARCH CHECKLISTS
+  # ============================================================================
+  best_practices_research:
+    - name: "Offizielle Dokumentation"
+      description: "Suche und lies offizielle Dokumentation"
+      priority: 1
+      
+    - name: "Community Standards"
+      description: "Recherchiere Community-Standards und -Empfehlungen"
+      priority: 1
+      
+    - name: "Beispielprojekte"
+      description: "Analysiere Beispielprojekte und Referenzimplementierungen"
+      priority: 2
+      
+    - name: "Anti-Patterns"
+      description: "Identifiziere häufige Anti-Patterns und wie man sie vermeidet"
+      priority: 2
+      
+    - name: "Performance Impact"
+      description: "Recherchiere Performance-Auswirkungen"
+      priority: 2
+      
+    - name: "Sicherheitsaspekte"
+      description: "Recherchiere Sicherheitsbest Practices"
+      priority: 1
+      
+    - name: "Barrierefreiheit"
+      description: "Recherchiere Accessibility-Best Practices"
+      priority: 2
+
+  api_research:
+    - name: "Endpoint Dokumentation"
+      description: "Finde und lese offizielle API-Dokumentation"
+      priority: 1
+      
+    - name: "Authentifizierung"
+      description: "Recherchiere Authentifizierungsmethoden (API Keys, OAuth, etc.)"
+      priority: 1
+      
+    - name: "Rate Limits"
+      description: "Ermittle Rate Limits und Quotas"
+      priority: 1
+      
+    - name: "Error Codes"
+      description: "Dokumentiere alle Error Codes und ihre Bedeutung"
+      priority: 2
+      
+    - name: "Pagination"
+      description: "Recherchiere Paginierungsmechanismen"
+      priority: 2
+      
+    - name: "Data Formats"
+      description: "Dokumentiere Request/Response-Formate"
+      priority: 1
+      
+    - name: "SDKs/Client Libraries"
+      description: "Finde offizielle SDKs und Client-Bibliotheken"
+      priority: 2
+      
+    - name: "Webhooks"
+      description: "Recherchiere Webhook-Funktionalität"
+      priority: 2
+
+  # ============================================================================
+  # CODE REVIEW CHECKLISTS
+  # ============================================================================
+  general_review:
+    code_quality:
+      - name: "Code lesbar?"
+        description: "Ist der Code gut lesbar und verständlich?"
+        severity: medium
+        
+      - name: "Einfache Logik?"
+        description: "Ist die Logik einfach und direkt?"
+        severity: medium
+        
+      - name: "Gute Namensgebung?"
+        description: "Sind Variablen, Funktionen und Klassen gut benannt?"
+        severity: high
+        
+      - name: "Konsistenter Stil?"
+        description: "Wird ein konsistenter Codestyle eingehalten?"
+        severity: medium
+        
+      - name: "DRY-Prinzip?"
+        description: "Wird Code dupliziert (Don't Repeat Yourself)?"
+        severity: high
+        
+      - name: "Single Responsibility?"
+        description: "Hat jede Funktion/Klasse nur eine Verantwortung?"
+        severity: high
+
+    functionality:
+      - name: "Funktionalität korrekt?"
+        description: "Erfüllt der Code die Anforderungen?"
+        severity: critical
+        
+      - name: "Edge Cases behandelt?"
+        description: "Werden Edge Cases und Sonderfälle behandelt?"
+        severity: high
+        
+      - name: "Error Handling?"
+        description: "Ist Error Handling implementiert?"
+        severity: high
+        
+      - name: "Input Validierung?"
+        description: "Wird Input validiert?"
+        severity: critical
+        
+      - name: "Side Effects?"
+        description: "Hat der Code unerwünschte Side Effects?"
+        severity: high
+
+    testing:
+      - name: "Tests vorhanden?"
+        description: "Gibt es Tests für diesen Code?"
+        severity: high
+        
+      - name: "Tests abgedeckt?"
+        description: "Decken die Tests alle wichtigen Fälle ab?"
+        severity: high
+        
+      - name: "Tests passieren?"
+        description: "Passieren alle Tests?"
+        severity: critical
+        
+      - name: "Test Performance?"
+        description: "Sind die Tests schnell genug?"
+        severity: medium
+
+    performance:
+      - name: "Performance kritisch?"
+        description: "Hat der Code Performance-Implikationen?"
+        severity: medium
+        
+      - name: "Algorithmus effizient?"
+        description: "Ist der gewählte Algorithmus effizient?"
+        severity: high
+        
+      - name: "Datenbank-Queries optimiert?"
+        description: "Sind Datenbank-Queries optimiert (N+1, etc.)?"
+        severity: high
+        
+      - name: "Caching genutzt?"
+        description: "Wird Caching wo sinnvoll genutzt?"
+        severity: medium
+
+    security:
+      - name: "Sicherheitslücken?"
+        description: "Gibt es potenzielle Sicherheitslücken?"
+        severity: critical
+        
+      - name: "Input sanitized?"
+        description: "Wird Input bereinigt/validiert?"
+        severity: critical
+        
+      - name: "Secrets sicher?"
+        description: "Werden Secrets sicher gespeichert/übertragen?"
+        severity: critical
+        
+      - name: "Auth Checks?"
+        description: "Gibt es Authentifizierungs- und Autorisierungschecks?"
+        severity: critical
+
+    documentation:
+      - name: "Code dokumentiert?"
+        description: "Ist der Code ausreichend dokumentiert?"
+        severity: medium
+        
+      - name: "Kommentare aktuell?"
+        description: "Sind Kommentare aktuell und korrekt?"
+        severity: medium
+        
+      - name: "Readme vorhanden?"
+        description: "Gibt es eine README mit Setup/Usage-Anleitung?"
+        severity: low
+        
+      - name: "Changelog aktualisiert?"
+        description: "Wurde der Changelog aktualisiert?"
+        severity: low
+
+  # ============================================================================
+  # TESTING CHECKLISTS
+  # ============================================================================
+  unit_testing:
+    - name: "Test Framework"
+      description: "Verwende ein passendes Test-Framework (Jest, Vitest, Mocha)"
+      
+    - name: "Test Struktur"
+      description: "Folge einer klaren Test-Struktur (Describe, It, etc.)"
+      
+    - name: "AAA Pattern"
+      description: "Verwende Arrange-Act-Assert Pattern"
+      
+    - name: "Isolierte Tests"
+      description: "Tests sollten isoliert und unabhängig sein"
+      
+    - name: "Mocking"
+      description: "Mock externe Abhängigkeiten"
+      
+    - name: "Edge Cases"
+      description: "Teste Edge Cases und Sonderfälle"
+      
+    - name: "Error Cases"
+      description: "Teste Error Cases und Exception Handling"
+      
+    - name: "Performance"
+      description: "Tests sollten schnell ausführbar sein"
+      
+    - name: "Test Coverage"
+      description: "Strebe nach hoher Testabdeckung an"
+
+  integration_testing:
+    - name: "Module Integration"
+      description: "Teste Integration zwischen Modulen"
+      
+    - name: "API Endpoints"
+      description: "Teste API-Endpoints und deren Integration"
+      
+    - name: "Database Integration"
+      description: "Teste Datenbank-Interaktionen"
+      
+    - name: "External Services"
+      description: "Teste Integration mit externen Services"
+      
+    - name: "Error Scenarios"
+      description: "Teste Fehler-Szenarien (Service down, etc.)"
+      
+    - name: "Data Flow"
+      description: "Teste den gesamten Datenfluss"
+
+  # ============================================================================
+  # TOOLING CHECKLISTS
+  # ============================================================================
+  build_pipeline:
+    - name: "Version Control"
+      description: "Verwende Versionskontrolle (Git)"
+      
+    - name: "Dependency Management"
+      description: "Verwende Package Manager (npm, pnpm, yarn)"
+      
+    - name: "Build Scripts"
+      description: "Definiere klare Build-Skripte in package.json"
+      
+    - name: "Environment Variables"
+      description: "Nutze Umgebungsvariablen für Konfiguration"
+      
+    - name: "Build Cache"
+      description: "Nutze Build-Cache für schnellere Builds"
+      
+    - name: "Artifact Management"
+      description: "Verwalte Build-Artefakte ordentlich"
+
+  ci_cd:
+    - name: "Automated Testing"
+      description: "Führe Tests automatisch in CI aus"
+      
+    - name: "Linting"
+      description: "Prüfe Code-Qualität mit Linter"
+      
+    - name: "Build Verification"
+      description: "Verifiziere, dass Build erfolgreich ist"
+      
+    - name: "Deployment Pipeline"
+      description: "Definiere klare Deployment-Stufen"
+      
+    - name: "Rollback Strategy"
+      description: "Implementiere Rollback-Strategie"
+      
+    - name: "Notifications"
+      description: "Konfiguriere Benachrichtigungen für Builds"
+      
+    - name: "Artifact Storage"
+      description: "Speichere Build-Artefakte"
+      
+    - name: "Security Scanning"
+      description: "Scanne auf Sicherheitslücken"

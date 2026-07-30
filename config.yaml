@@ -1,0 +1,100 @@
+# HyperVibe Configuration
+# ======================
+
+# Maximale Anzahl gleichzeitig laufender Subagents
+max_concurrent_agents: 8
+
+# Maximale Gesamtzahl an Subagents pro Workflow
+max_total_agents: 50
+
+# Standard-Timeout für Subagents (in Minuten)
+default_timeout_minutes: 5
+
+# Maximale Gesamtlaufzeit eines Workflows (in Minuten)
+max_workflow_duration_minutes: 60
+
+# Komplexitäts-Schwellwerte
+# Anzahl Subagents, ab denen eine Aufgabe als diese Komplexität gilt
+complexity_thresholds:
+  low: 1      # ⭐   (1 Subagent)
+  medium: 3   # ⭐⭐  (2-3 Subagents)
+  high: 6     # ⭐⭐⭐ (4-6 Subagents)
+  very_high: 10 # ⭐⭐⭐⭐ (7-10 Subagents)
+
+# Standard-Strategien nach Aufgabentyp
+task_type_strategies:
+  migration:
+    default_agents: 4
+    parallel: true
+    chunk_size: 10  # Anzahl Dateien pro Subagent
+    
+  audit:
+    default_agents: 3
+    parallel: true
+    chunk_size: 5
+    
+  research:
+    default_agents: 3
+    parallel: true
+    chunk_size: 1  # Jeder Subagent behandelt ein Thema
+    
+  review:
+    default_agents: 2
+    parallel: true
+    chunk_size: 5
+    
+  testing:
+    default_agents: 2
+    parallel: false  # Sequentiell: Build → Test → Report
+    
+  scraping:
+    default_agents: 5
+    parallel: true
+    chunk_size: 3  # Anzahl URLs pro Subagent
+    
+  tooling:
+    default_agents: 2
+    parallel: false  # Meist sequentielle Abhängigkeiten
+    
+  refactoring:
+    default_agents: 4
+    parallel: true
+    chunk_size: 8
+
+# Token-Schätzungen (pro Subagent)
+token_estimates:
+  simple: 5000    # Einfache Analyse
+  medium: 15000   # Mittlere Aufgabe
+  complex: 30000  # Komplexe Aufgabe
+  
+# Zeit-Schätzungen (pro Subagent in Minuten)
+time_estimates:
+  simple: 2      # < 2 Minuten
+  medium: 5      # < 5 Minuten
+  complex: 10    # < 10 Minuten
+
+# Automatische Erkennung
+auto_detect:
+  enabled: true
+  # Minimale Task-Länge für automatische Erkennung
+  min_task_length: 20
+  # Vertrauensstufe (0-1): Wie sicher muss die Erkennung sein?
+  confidence_threshold: 0.7
+
+# Benachrichtigungen
+notifications:
+  # Zeige Fortschritt während der Ausführung
+  show_progress: true
+  # Zeige geschätzte verbleibende Zeit
+  show_eta: true
+  # Zeige Token-Verbrauch
+  show_token_usage: true
+
+# Logging
+logging:
+  # Speichere Workflow-Historie
+  save_history: true
+  # Maximale Anzahl gespeicherter Workflows
+  max_history: 20
+  # Log-Datei Pfad
+  log_path: "~/.vibe/hypervibe_history.json"

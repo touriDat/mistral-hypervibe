@@ -1,0 +1,121 @@
+# Parallel Workflow Strategy
+# ==========================
+# 
+# Diese Datei definiert die Strategie für parallele Ausführung von Subagents.
+# Verwendet für Aufgaben, die unabhängig voneinander bearbeitet werden können.
+
+strategy: parallel
+
+# Standard-Konfiguration
+config:
+  max_concurrent: 8          # Maximale gleichzeitig laufende Subagents
+  chunk_size: 10             # Anzahl Aufgaben pro Subagent
+  timeout_minutes: 5        # Timeout pro Subagent
+  retry_attempts: 2         # Anzahl Wiederholungsversuche bei Fehlern
+  
+# Aufteilung nach Aufgabentyp
+task_types:
+  migration:
+    chunk_size: 8
+    max_concurrent: 6
+    timeout_minutes: 8
+    
+  audit:
+    chunk_size: 5
+    max_concurrent: 4
+    timeout_minutes: 6
+    
+  research:
+    chunk_size: 1
+    max_concurrent: 5
+    timeout_minutes: 4
+    
+  review:
+    chunk_size: 5
+    max_concurrent: 4
+    timeout_minutes: 5
+    
+  scraping:
+    chunk_size: 3
+    max_concurrent: 8
+    timeout_minutes: 3
+    
+  refactoring:
+    chunk_size: 4
+    max_concurrent: 5
+    timeout_minutes: 7
+
+# Load Balancing
+load_balancing:
+  strategy: round_robin      # round_robin, random, weighted
+  
+  # Gewichtung nach Komplexität (wenn strategy: weighted)
+  complexity_weights:
+    low: 1
+    medium: 2
+    high: 3
+    very_high: 4
+
+# Fehlerbehandlung
+error_handling:
+  # Fortsetzen mit restlichen Aufgaben, wenn ein Subagent fehlschlägt
+  continue_on_error: true
+  
+  # Alle Subagents stoppen, wenn ein kritischer Fehler auftritt
+  stop_on_critical: false
+  
+  # Kritische Fehler-Kategorien
+  critical_errors:
+    - permission_denied
+    - rate_limit_exceeded
+    - authentication_failed
+    - out_of_memory
+
+# Ergebnisse-Zusammenführung
+result_aggregation:
+  # Warte auf alle Subagents, bevor Ergebnisse zusammengefasst werden
+  wait_for_all: true
+  
+  # Zeitlimit für Zusammenführung (Minuten)
+  aggregation_timeout: 10
+  
+  # Strategie für Konfliktlösung
+  conflict_resolution:
+    strategy: latest_wins    # latest_wins, first_wins, manual
+    
+    # Bei manueller Auflösung: User wird gefragt
+    manual_resolution: false
+
+# Fortschrittsberichte
+progress_reporting:
+  # Berichte Fortschritt alle X Minuten
+  interval_minutes: 2
+  
+  # Zeige geschätzte verbleibende Zeit
+  show_eta: true
+  
+  # Benachrichtigung bei Fertigstellung
+  notify_on_complete: true
+
+# Ressourcen-Limits
+resource_limits:
+  max_tokens_total: 200000     # Maximale Tokens für gesamten Workflow
+  max_duration_minutes: 60     # Maximale Dauer
+  max_memory_mb: 2048          # Maximaler Speicher
+
+# Monitoring
+monitoring:
+  track_token_usage: true
+  track_execution_time: true
+  log_subagent_status: true
+
+# Ausführung
+parallel_execution:
+  # Starte alle Subagents gleichzeitig
+  start_simultaneously: true
+  
+  # Warte auf Fertigstellung aller vor Fortsetzung
+  wait_for_completion: true
+  
+  # Sammle Ergebnisse in Echtzeit
+  collect_results_realtime: true

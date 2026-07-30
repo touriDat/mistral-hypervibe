@@ -1,0 +1,182 @@
+# Sequential Workflow Strategy
+# ===========================
+# 
+# Diese Datei definiert die Strategie für sequentielle Ausführung von Subagents.
+# Verwendet für Aufgaben mit Abhängigkeiten zwischen den Schritten.
+
+strategy: sequential
+
+# Standard-Konfiguration
+config:
+  timeout_minutes: 5        # Timeout pro Subagent
+  retry_attempts: 2         # Anzahl Wiederholungsversuche
+  continue_on_failure: false # Bei Fehler: abbrechen oder weitermachen?
+
+# Abhängigkeitsmanagement
+dependency_management:
+  # Definiere Abhängigkeiten zwischen Phasen
+  dependencies:
+    # Format: phase_name: [dependent_phase1, dependent_phase2, ...]
+    build: []
+    test: [build]
+    deploy: [build, test]
+    lint: []
+    validate: [lint, test]
+    
+  # Automatische Erkennung von Abhängigkeiten
+  auto_detect: true
+  
+  # Bei Zyklen in Abhängigkeiten
+  cycle_resolution: fail  # fail, warn, ignore
+
+# Phasen-Definition
+phases:
+  - name: analysis
+    description: "Analysephase - untersucht den aktuellen Zustand"
+    required: true
+    can_skip: false
+    timeout_minutes: 3
+    
+  - name: preparation
+    description: "Vorbereitungsphase - Setup für die Hauptaufgabe"
+    required: false
+    can_skip: true
+    timeout_minutes: 2
+    dependencies: [analysis]
+    
+  - name: execution
+    description: "Ausführungsphase - Hauptaufgabe"
+    required: true
+    can_skip: false
+    timeout_minutes: 10
+    dependencies: [analysis, preparation]
+    
+  - name: validation
+    description: "Validierungsphase - Prüfung der Ergebnisse"
+    required: true
+    can_skip: false
+    timeout_minutes: 5
+    dependencies: [execution]
+    
+  - name: reporting
+    description: "Berichtsphase - Zusammenfassung und Dokumentation"
+    required: true
+    can_skip: false
+    timeout_minutes: 3
+    dependencies: [validation]
+
+# Aufgabentyp-spezifische Phasen
+phase_mappings:
+  migration:
+    - analysis
+    - execution
+    - validation
+    - reporting
+    
+  audit:
+    - analysis
+    - execution
+    - validation
+    - reporting
+    
+  research:
+    - analysis
+    - preparation
+    - execution
+    - validation
+    - reporting
+    
+  review:
+    - analysis
+    - execution
+    - validation
+    - reporting
+    
+  testing:
+    - preparation
+    - execution
+    - validation
+    - reporting
+    
+  tooling:
+    - analysis
+    - preparation
+    - execution
+    - validation
+    - reporting
+    
+  scraping:
+    - analysis
+    - execution
+    - validation
+    - reporting
+    
+  refactoring:
+    - analysis
+    - preparation
+    - execution
+    - validation
+    - reporting
+
+# Fehlerbehandlung
+error_handling:
+  # Bei Fehler in einer Phase
+  on_phase_failure:
+    action: stop              # stop, continue, skip
+    notify: true              # User benachrichtigen
+    log_details: true        # Detaillierte Fehlermeldung loggen
+  
+  # Bei Timeout einer Phase
+  on_phase_timeout:
+    action: retry             # retry, skip, fail
+    max_retries: 2
+    retry_delay_seconds: 10
+  
+  # Kritische Phasen (bei Fehler: immer abbrechen)
+  critical_phases:
+    - validation
+    - reporting
+
+# Ergebnisse-Weitergabe
+result_passing:
+  # Ergebnisse einer Phase werden an nächste Phase übergeben
+  pass_results: true
+  
+  # Format der Ergebnisse
+  result_format: json      # json, markdown, text
+  
+  # Speicherort für Zwischenresultate
+  temp_storage: memory     # memory, file, database
+
+# Fortschrittsberichte
+progress_reporting:
+  interval_minutes: 1
+  show_current_phase: true
+  show_completed_phases: true
+  show_pending_phases: true
+  show_eta: true
+
+# Ressourcen-Limits
+resource_limits:
+  max_tokens_total: 150000
+  max_duration_minutes: 60
+  max_memory_mb: 1024
+
+# Rollback-Strategie
+rollback:
+  enabled: true
+  
+  # Rollback nach Phase
+  phase_rollback:
+    analysis: false
+    preparation: true
+    execution: true
+    validation: false
+    reporting: false
+  
+  # Rollback-Methode
+  method: state_restore  # state_restore, manual, script
+  
+  # Automatische Backups
+  auto_backup: true
+  backup_frequency: phase  # phase, step, manual
