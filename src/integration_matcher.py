@@ -314,9 +314,13 @@ class IntegrationMatcher:
         compiled = []
         for pattern in patterns:
             try:
-                # Unterstütze sowohl einfache Strings als auch Regex-Patterns
-                if pattern.startswith('(?:') or pattern.startswith('.*'):
-                    # schon ein Regex-Pattern
+                # Prüfe ob das Pattern Regex-Sonderzeichen enthält
+                # Wenn ja, als Regex-Pattern behandeln
+                regex_chars = ['.', '*', '+', '?', '^', '$', '[', ']', '(', ')', '{', '}', '|']
+                has_regex_chars = any(char in pattern for char in regex_chars)
+                
+                if has_regex_chars or pattern.startswith('(?:') or pattern.startswith('.*'):
+                    # Regex-Pattern - direkt kompilieren
                     compiled.append((re.compile(pattern, re.IGNORECASE), pattern))
                 else:
                     # Einfaches Keyword - als Substring suchen
