@@ -365,6 +365,87 @@ Wenn mehrere Skills/MCPs passen:
 - **MCP nicht erreichbar**: Retry (2x), dann Überspringen mit Warnung
 - **Zu viele Matches**: Nur Top 3 werden angezeigt
 
+## Implementierungsdetails
+
+### Architektur
+
+```
+src/
+├── hypervibe.py          # Haupt-Workflow-Orchestrator
+└── integration_matcher.py # Integration-Engine
+    
+integrations/
+├── skills.yaml           # Skill-Konfigurationen
+├── mcps.yaml             # MCP-Server-Konfigurationen
+└── README.md             # Integrations-Dokumentation
+
+tests/
+├── __init__.py
+├── README.md             # Test-Dokumentation
+└── test_integration_matcher.py  # Unit-Tests
+```
+
+### IntegrationMatcher-Klasse
+
+Die **IntegrationMatcher**-Klasse ist das Herzstück der Integration-Engine:
+
+**Verantwortlichkeiten:**
+- Lädt und parst `skills.yaml`, `mcps.yaml` und `patterns.yaml`
+- Erkennt Aufgabentypen basierend auf Regex-Patterns
+- Findet passende Skills und MCP-Server für eine Aufgabe
+- Löst Konflikte zwischen mehreren Matches
+- Erstellt Integrationsvorschläge mit Prioritäten
+
+**Wichtige Methoden:**
+
+| Methode | Beschreibung |
+|---------|--------------|
+| `create_proposal(task)` | Erstellt einen Integrationsvorschlag für eine Aufgabe |
+| `find_matches(task, type)` | Findet alle passenden Integrationen |
+| `detect_task_type(task)` | Erkennt den Aufgabentyp (migration, audit, etc.) |
+
+**Konfigurationsdateien:**
+
+- **skills.yaml**: Definiert welche Skills für welche Aufgabentypen geeignet sind
+- **mcps.yaml**: Definiert welche MCP-Server für welche Aufgabentypen geeignet sind
+- **patterns.yaml**: Definiert Regex-Patterns für die Aufgabentyp-Erkennung
+
+### WorkflowExecutor-Erweiterung
+
+Der `WorkflowExecutor` wurde um Integrationsunterstützung erweitert:
+
+```python
+# Erstellt einen Workflow-Plan mit Integrationsvorschlägen
+workflow_plan = executor.create_workflow_plan(
+    task="migriere Vue zu Composition API",
+    enable_integrations=True
+)
+
+# Der Plan enthält jetzt:
+# - workflow_plan.integration_proposal (Integrationsvorschläge)
+# - workflow_plan.integrations_enabled (Flag)
+```
+
+### Testabdeckung
+
+**22 Unit-Tests** decken folgende Funktionalitäten ab:
+
+| Komponente | Tests | Status |
+|-----------|-------|--------|
+| IntegrationMatcher | 16 | ✅ |
+| IntegrationProposal | 5 | ✅ |
+| IntegrationFormatter | 3 | ✅ |
+| Konfliktlösung | 3 | ✅ |
+
+**Testausführung:**
+```bash
+# Alle Tests
+python -m unittest discover tests -v
+
+# Nur IntegrationMatcher
+python -m unittest tests.test_integration_matcher -v
+```
+
 ## Verwandte Skills
 
 - `mapbox-web-integration-patterns`: Für Mapbox-spezifische Aufgaben (wird automatisch integriert!)

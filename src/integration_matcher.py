@@ -1,9 +1,34 @@
 #!/usr/bin/env python3
 """
-Integration Matcher - Erkennt und schlaegt passende Skills und MCP-Server vor.
+Integration Matcher - Integration-Engine für HyperVibe
 
-Diese Klasse laedt die Konfigurationen aus skills.yaml und mcps.yaml
-und findet basierend auf der Aufgabe die besten Integrationen.
+Diese Klasse ist das Herzstück der Integration-Funktionalität. Sie:
+
+1. Lädt Konfigurationen aus YAML-Dateien:
+   - skills.yaml: Skill-Integrationen
+   - mcps.yaml: MCP-Server-Integrationen
+   - patterns.yaml: Aufgaben-Typ-Patterns
+
+2. Erkennt passende Integrationen für jede Aufgabe:
+   - Pattern-Matching gegen Aufgabentext
+   - Prioritäten-basierte Auswahl
+   - Konfliktlösung bei mehreren Matches
+
+3. Erstellt Integrationsvorschläge:
+   - Automatisch aktivierte Integrationen
+   - Vorgeschlagene Integrationen (User-Entscheidung)
+   - Zwingend erforderliche Integrationen
+
+Beispiel:
+    >>> matcher = IntegrationMatcher()
+    >>> proposal = matcher.create_proposal("migriere Vue zu Mapbox v3")
+    >>> print(IntegrationFormatter.format_proposal(proposal))
+
+Verwandte Klassen:
+    - IntegrationProposal: Vorschlagsstruktur
+    - IntegrationMatch: Einzelner Integrations-Match
+    - IntegrationFormatter: Formatierung für Ausgabe
+    - ConflictResolutionStrategy: Konfliktlösungsstrategien
 """
 
 import re
@@ -19,20 +44,23 @@ from enum import Enum
 # ============================================================================
 
 class IntegrationType(Enum):
-    SKILL = "skill"
-    MCP = "mcp"
+    """Typ einer Integration."""
+    SKILL = "skill"  # Skill-Integration (z.B. mapbox-web-integration-patterns)
+    MCP = "mcp"      # MCP-Server-Integration (z.B. mapbox-location-grounding)
 
 
 class IntegrationMode(Enum):
-    AUTO = "auto"
-    SUGGEST = "suggest"
-    REQUIRED = "required"
+    """Modus, in dem eine Integration aktiviert wird."""
+    AUTO = "auto"      # Automatisch aktivieren (ohne User-Bestätigung)
+    SUGGEST = "suggest" # User entscheidet über Aktivierung
+    REQUIRED = "required" # Zwingend erforderlich für die Aufgabe
 
 
 class ConflictResolutionStrategy(Enum):
-    HIGHEST_PRIORITY = "highest_priority"
-    FIRST_MATCH = "first_match"
-    USER_CHOICE = "user_choice"
+    """Strategie zur Lösung von Konflikten bei mehreren Matches."""
+    HIGHEST_PRIORITY = "highest_priority"  # Wähle Integrationen mit höchster Priorität
+    FIRST_MATCH = "first_match"            # Wähle den ersten gefundenen Match
+    USER_CHOICE = "user_choice"           # Zeige Top N dem User zur Auswahl
 
 
 # ============================================================================
@@ -41,7 +69,23 @@ class ConflictResolutionStrategy(Enum):
 
 @dataclass
 class IntegrationMatch:
-    """Ein gefundener Match für eine Integration."""
+    """
+    Ein gefundener Match für eine Integration (Skill oder MCP).
+    
+    Enthält alle Informationen, die nötig sind, um eine Integration
+    zu identifizieren und zu aktivieren.
+    
+    Attributes:
+        name: Name der Integration (z.B. "mapbox-web-integration-patterns")
+        type: Typ (SKILL oder MCP)
+        integration_mode: Modus (AUTO, SUGGEST, REQUIRED)
+        priority: Priorität aus der Konfiguration (höher = besser)
+        description: Menschlich lesbare Beschreibung
+        matched_pattern: Das Pattern, das gematcht hat
+        score: Berechneter Match-Score (0.0 - 10.0+)
+        trigger_patterns: Alle trigger_patterns aus der Konfiguration
+        tools: Verfügbare Tools dieser Integration (falls MCP)
+    """
     name: str
     type: IntegrationType
     integration_mode: IntegrationMode
@@ -55,7 +99,19 @@ class IntegrationMatch:
 
 @dataclass
 class IntegrationProposal:
-    """Vorschlag für Integrationen zu einer Aufgabe."""
+    """
+    Vorschlag für Integrationen zu einer Aufgabe.
+    
+    Enthält alle Integrationen, die für eine gegebene Aufgabe passen,
+    kategorisiert nach Aktivierungsmodus.
+    
+    Attributes:
+        auto_integrations: Integrationen, die automatisch aktiviert werden
+        suggested_integrations: Integrationen, die dem User vorgeschlagen werden
+        required_integrations: Integrationen, die zwingend erforderlich sind
+        task_type: Erkanntes Aufgabentyp (migration, audit, research, etc.)
+        confidence: Vertrauensstufe (0.0 - 1.0) basierend auf der Anzahl Matches
+    """
     auto_integrations: List[IntegrationMatch] = field(default_factory=list)
     suggested_integrations: List[IntegrationMatch] = field(default_factory=list)
     required_integrations: List[IntegrationMatch] = field(default_factory=list)
@@ -400,12 +456,29 @@ class IntegrationMatcher:
         """
         Findet alle passenden Integrationen für eine Aufgabe.
         
+        Durchsucht alle Skills und MCPs nach passenden trigger_patterns.
+        Jeder Match enthält:
+        - name: Name der Integration
+        - type: SKILL oder MCP
+        - priority: Priorität aus der Konfiguration
+        - score: Berechneter Match-Score
+        - matched_pattern: Das Pattern, das gematcht hat
+        - description: Beschreibung der Integration
+        - tools: Verfügbare Tools (falls vorhanden)
+        
         Args:
-            task: Die Aufgabe als String
+            task: Die Aufgabe als String (z.B. "migriere Vue zu Mapbox")
             integration_type: Filter nach IntegrationType (SKILL, MCP) oder None für beide
             
         Returns:
-            Liste aller gefundenen Matches, sortiert nach Score
+            Liste aller gefundenen IntegrationMatch-Objekte, sortiert nach Score
+            (absteigend: beste Matches zuerst)
+            
+        Beispiel:
+            >>> matcher = IntegrationMatcher()
+            >>> matches = matcher.find_matches("migriere Vue zu Mapbox", IntegrationType.SKILL)
+            >>> for m in matches:
+            ...     print(f"{m.name} (Score: {m.score:.1f})")
         """
         matches: List[IntegrationMatch] = []
         
@@ -474,13 +547,26 @@ class IntegrationMatcher:
     
     def create_proposal(self, task: str) -> IntegrationProposal:
         """
-        Erstellt einen Integrationsvorschlag für eine Aufgabe.
+        Erstellt einen Integrationsvorschlag für eine gegebene Aufgabe.
+        
+        Dieser Methode analysiert die Aufgabe und schlägt passende Skills
+        und MCP-Server vor, die bei der Ausführung helfen können.
         
         Args:
-            task: Die Aufgabe als String
+            task: Die Aufgabe als String (z.B. "migriere Vue zu Composition API")
             
         Returns:
-            IntegrationProposal mit kategorisierten Integrationen
+            IntegrationProposal mit:
+            - auto_integrations: Automatisch zu aktivierende Integrationen
+            - suggested_integrations: Vorgeschlagene Integrationen (User-Entscheidung)
+            - required_integrations: Zwingend erforderliche Integrationen
+            - task_type: Erkanntes Aufgabentyp (migration, audit, research, etc.)
+            - confidence: Vertrauensstufe (0.0 - 1.0)
+            
+        Beispiel:
+            >>> matcher = IntegrationMatcher()
+            >>> proposal = matcher.create_proposal("auditiere die Codebase")
+            >>> print(f"Gefunden: {len(proposal.auto_integrations)} Integrationen")
         """
         all_matches = self.find_matches(task)
         

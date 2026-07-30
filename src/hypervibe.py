@@ -2,7 +2,19 @@
 """
 HyperVibe - Intelligenter Workflow-Orchestrator
 
-Eine vereinfachte Version, die sofort funktioniert.
+Ein Werkzeug, das komplexe Aufgaben automatisch in Subagents aufteilt und
+passende Skills und MCP-Server vorschlägt.
+
+Features:
+- Automatische Aufgabentyp-Erkennung (Migration, Audit, Recherche, etc.)
+- Intelligente Aufteilung in Subagents (parallel oder sequentiell)
+- Integration mit anderen Skills und MCP-Servern
+- Ressourcen-Schätzung (Dauer, Tokens)
+- Workflow-Planung mit User-Bestätigung
+
+Beispiel:
+    >>> hv = HyperVibe()
+    >>> result = hv.process_task("migriere Vue zu Composition API")
 """
 
 import re
@@ -65,6 +77,18 @@ class ComplexityLevel(Enum):
 
 @dataclass
 class TaskAnalysis:
+    """
+    Analyse einer Aufgabe.
+    
+    Enthält alle Informationen, die für die Workflow-Planung benötigt werden.
+    
+    Attributes:
+        raw_task: Die ursprüngliche Aufgabe als String
+        type: Erkanntes Aufgabentyp (MIGRATION, AUDIT, RESEARCH, etc.)
+        scope: Erkannter Scope (Technologie, Bereich, etc.)
+        complexity: Komplexitätsstufe (LOW, MEDIUM, HIGH)
+        confidence: Vertrauensstufe der Erkennung (0.0 - 1.0)
+    """
     raw_task: str
     type: TaskType = TaskType.UNKNOWN
     scope: Optional[str] = None
@@ -72,6 +96,12 @@ class TaskAnalysis:
     confidence: float = 0.0
     
     def complexity_stars(self) -> str:
+        """
+        Gibt die Komplexität als Sternchen-Darstellung zurück.
+        
+        Returns:
+            String mit 1-3 Sternchen: "⭐", "⭐⭐", "⭐⭐⭐"
+        """
         return {
             ComplexityLevel.LOW: "⭐",
             ComplexityLevel.MEDIUM: "⭐⭐",
@@ -90,6 +120,21 @@ class SubAgent:
 
 @dataclass
 class WorkflowPlan:
+    """
+    Workflow-Plan für eine Aufgabe.
+    
+    Enthält alle Informationen, die für die Ausführung eines Workflows
+    benötigt werden.
+    
+    Attributes:
+        task_analysis: Analyse der Aufgabe
+        subagents: Liste der Subagents für die Ausführung
+        strategy: Ausführungsstrategie ("parallel" oder "sequential")
+        estimated_duration: Geschätzte Dauer in Minuten
+        estimated_tokens: Geschätzte Token-Anzahl
+        integration_proposal: Integrationsvorschläge (falls aktiviert)
+        integrations_enabled: Ob Integrationen aktiviert sind
+    """
     task_analysis: TaskAnalysis
     subagents: List[SubAgent] = field(default_factory=list)
     strategy: str = "parallel"
@@ -232,8 +277,22 @@ class PatternMatcher:
 # ============================================================================
 
 class WorkflowExecutor:
-    """Orchestriert Workflows."""
+    """
+    Orchestriert die Ausführung von Workflows.
     
+    Verantwortlichkeiten:
+    - Workflow-Pläne erstellen
+    - Subagents erstellen und verwalten
+    - Integrationsvorschläge generieren
+    - Workflows ausführen (parallel oder sequentiell)
+    
+    Attributes:
+        TASK_STRATEGIES: Standard-Strategien für jeden Aufgabentyp
+        config_dir: Verzeichnis mit den Konfigurationsdateien
+        integration_matcher: IntegrationMatcher für Integrationsvorschläge
+    """
+    
+    # Standard-Strategien: Anzahl Subagents und Ausführungsmodus
     TASK_STRATEGIES = {
         TaskType.MIGRATION: {"default_agents": 4, "parallel": True},
         TaskType.AUDIT: {"default_agents": 3, "parallel": True},
@@ -247,7 +306,13 @@ class WorkflowExecutor:
     }
     
     def __init__(self, config_dir: Optional[str] = None):
-        """Initialisiert den WorkflowExecutor."""
+        """
+        Initialisiert den WorkflowExecutor.
+        
+        Args:
+            config_dir: Verzeichnis mit den Konfigurationsdateien.
+                       Default: Verzeichnis der hypervibe.py
+        """
         self.config_dir = config_dir or os.path.dirname(os.path.dirname(__file__))
         self.integration_matcher = IntegrationMatcher(self.config_dir)
     
@@ -256,7 +321,32 @@ class WorkflowExecutor:
         task: str, 
         enable_integrations: bool = True
     ) -> WorkflowPlan:
-        """Erstellt einen Workflow-Plan mit optionaler Integration."""
+        """
+        Erstellt einen Workflow-Plan für eine gegebene Aufgabe.
+        
+        Analysiert die Aufgabe, bestimmt den Typ und die Komplexität,
+        erstellt Subagents und schlägt passende Integrationen vor.
+        
+        Args:
+            task: Die Aufgabe als String (z.B. "migriere Vue zu Composition API")
+            enable_integrations: Ob Integrationsvorschläge erstellt werden sollen
+                              (Default: True)
+            
+        Returns:
+            WorkflowPlan mit:
+            - task_analysis: Aufgabenanalyse (Typ, Scope, Komplexität)
+            - subagents: Liste der Subagents
+            - strategy: Ausführungsstrategie ("parallel" oder "sequential")
+            - estimated_duration: Geschätzte Dauer in Minuten
+            - estimated_tokens: Geschätzte Token-Anzahl
+            - integration_proposal: Integrationsvorschläge (falls aktiviert)
+            - integrations_enabled: Ob Integrationen aktiviert sind
+            
+        Beispiel:
+            >>> executor = WorkflowExecutor()
+            >>> plan = executor.create_workflow_plan("auditiere die Codebase")
+            >>> print(f"Subagents: {len(plan.subagents)}")
+        """
         # Analysiere die Aufgabe
         pattern_matcher = PatternMatcher()
         task_analysis = pattern_matcher.analyze_task(task)
@@ -405,9 +495,35 @@ class WorkflowExecutor:
 # ============================================================================
 
 class HyperVibe:
-    """Hauptklasse für HyperVibe."""
+    """
+    Hauptklasse für HyperVibe - Intelligenter Workflow-Orchestrator.
+    
+    Diese Klasse orchestriert den gesamten Workflow:
+    1. Aufgabenanalyse (Typ, Scope, Komplexität)
+    2. Integrationsvorschläge erstellen
+    3. Workflow-Plan generieren
+    4. Workflow ausführen (mit Subagents)
+    
+    Beispiel:
+        >>> hv = HyperVibe(verbose=True)
+        >>> result = hv.process_task("migriere Vue zu Composition API")
+        
+    Attributes:
+        verbose: Gibt ausführliche Informationen aus
+        config_dir: Verzeichnis mit den Konfigurationsdateien
+        executor: WorkflowExecutor für die Ausführung
+        integration_matcher: IntegrationMatcher für Integrationsvorschläge
+    """
     
     def __init__(self, verbose: bool = False, config_dir: Optional[str] = None):
+        """
+        Initialisiert HyperVibe.
+        
+        Args:
+            verbose: Gibt ausführliche Informationen aus (Default: False)
+            config_dir: Verzeichnis mit den Konfigurationsdateien.
+                       Default: Verzeichnis der hypervibe.py
+        """
         self.verbose = verbose
         self.config_dir = config_dir or os.path.dirname(os.path.dirname(__file__))
         self.executor = WorkflowExecutor(self.config_dir)
@@ -419,7 +535,30 @@ class HyperVibe:
         auto_confirm: bool = False,
         execute: bool = True
     ) -> Optional[ExecutionResult]:
-        """Verarbeitet eine Aufgabe von Anfang bis Ende."""
+        """
+        Verarbeitet eine Aufgabe von Anfang bis Ende.
+        
+        Durchläuft den gesamten Workflow:
+        1. Aufgabenanalyse
+        2. Workflow-Plan erstellen
+        3. (Optional) User-Bestätigung
+        4. (Optional) Workflow ausführen
+        
+        Args:
+            task: Die Aufgabe als String
+            auto_confirm: Automatische Bestätigung des Plans (Default: False)
+            execute: Workflow ausführen (Default: True). Falls False, wird nur
+                     der Plan erstellt und angezeigt.
+            
+        Returns:
+            ExecutionResult mit den Ergebnissen oder None, wenn nur der Plan
+            angezeigt wurde (execute=False)
+            
+        Beispiel:
+            >>> hv = HyperVibe()
+            >>> result = hv.process_task("migriere Vue zu Composition API")
+            >>> print(f"Erfolg: {result.success}")
+        """
         # Erstelle Workflow-Plan
         workflow_plan = self.executor.create_workflow_plan(task)
         
